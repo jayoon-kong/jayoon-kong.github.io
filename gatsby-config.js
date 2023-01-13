@@ -15,7 +15,7 @@ module.exports = {
       summary: `SK플래닛 프론트엔드 개발자입니다.`,
     },
     description: `공자윤의 기술블로그`,
-    siteUrl: `https://gatsbystarterblogsource.gatsbyjs.io/`,
+    siteUrl: `https://jayoon-kong.github.io/`,
     social: {},
   },
   plugins: [

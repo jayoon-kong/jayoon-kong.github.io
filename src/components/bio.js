@@ -5,9 +5,8 @@
  * See: https://www.gatsbyjs.com/docs/how-to/querying-data/use-static-query/
  */
 
-import { Link } from "gatsby";
 import * as React from "react"
-import { useAuthor } from "../hooks/useAuthor";
+import { useAuthor } from "../hooks/useAuthor"
 
 const Bio = ({ author }) => {
   const { name, description, thumbnail, link } = useAuthor(author);
@@ -16,7 +15,7 @@ const Bio = ({ author }) => {
       <img src={thumbnail} alt="profile" className="bio-avatar" />
       {author && (
         <p>
-          {link ? <Link to={link} target="_blank"><strong>{name}</strong></Link> : <strong>{name}</strong>}
+          {link ? <a href={link} target="_blank" rel="noreferrer"><strong>{name}</strong></a> : <strong>{name}</strong>}
           <br />
           {description}
         </p>
