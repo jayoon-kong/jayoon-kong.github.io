@@ -5,31 +5,21 @@ import { StaticImage } from "gatsby-plugin-image"
 const Layout = ({ location, title, children }) => {
   const rootPath = `${__PATH_PREFIX__}/`
   const isRootPath = location.pathname === rootPath
-  let header
-
-  if (isRootPath) {
-    header = (
-      <div className="main-heading">
-        <StaticImage
-          className="bio-avatar"
-          layout="fixed"
-          formats={["auto", "webp", "avif"]}
-          src="../images/cony.png"
-          width={50}
-          height={50}
-          quality={95}
-          alt="Profile picture"
-        />
-        <Link to="/">{title}</Link>
-      </div>
-    )
-  } else {
-    header = (
-      <Link className="header-link-home" to="/">
-        {title}
-      </Link>
-    )
-  }
+  const header = (
+    <div className="main-heading">
+      <StaticImage
+        className="bio-avatar"
+        layout="fixed"
+        formats={["auto", "webp", "avif"]}
+        src="../images/cony.png"
+        width={50}
+        height={50}
+        quality={95}
+        alt="Profile picture"
+      />
+      <Link to="/">{title}</Link>
+    </div>
+  )
 
   return (
     <div className="global-wrapper" data-is-root-path={isRootPath}>
