@@ -9,16 +9,14 @@
  */
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Starter Blog`,
+    title: `공자윤의 기술블로그`,
     author: {
-      name: `Kyle Mathews`,
-      summary: `who lives and works in San Francisco building useful things.`,
+      name: `공자윤`,
+      summary: `SK플래닛 프론트엔드 개발자입니다.`,
     },
-    description: `A starter blog demonstrating what Gatsby can do.`,
+    description: `공자윤의 기술블로그`,
     siteUrl: `https://gatsbystarterblogsource.gatsbyjs.io/`,
-    social: {
-      twitter: `kylemathews`,
-    },
+    social: {},
   },
   plugins: [
     `gatsby-plugin-image`,
@@ -120,6 +118,15 @@ module.exports = {
         display: `minimal-ui`,
         icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
       },
+    },
+    `gatsby-plugin-sitemap`,
+    {
+      resolve: 'gatsby-plugin-robots-txt',
+      options: {
+        host: 'https://jayoon-kong.github.io',
+        sitemap: 'https://jayoon-kong.github.io/sitemap.xml',
+        policy: [{ userAgent: '*', allow: '/' }]
+      }
     },
   ],
 }

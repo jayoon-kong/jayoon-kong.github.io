@@ -1,5 +1,6 @@
 import * as React from "react"
 import { Link } from "gatsby"
+import { StaticImage } from "gatsby-plugin-image"
 
 const Layout = ({ location, title, children }) => {
   const rootPath = `${__PATH_PREFIX__}/`
@@ -8,9 +9,19 @@ const Layout = ({ location, title, children }) => {
 
   if (isRootPath) {
     header = (
-      <h1 className="main-heading">
+      <div className="main-heading">
+        <StaticImage
+          className="bio-avatar"
+          layout="fixed"
+          formats={["auto", "webp", "avif"]}
+          src="../images/cony.png"
+          width={50}
+          height={50}
+          quality={95}
+          alt="Profile picture"
+        />
         <Link to="/">{title}</Link>
-      </h1>
+      </div>
     )
   } else {
     header = (
@@ -24,10 +35,9 @@ const Layout = ({ location, title, children }) => {
     <div className="global-wrapper" data-is-root-path={isRootPath}>
       <header className="global-header">{header}</header>
       <main>{children}</main>
-      <footer>
-        © {new Date().getFullYear()}, Built with
-        {` `}
-        <a href="https://www.gatsbyjs.com">Gatsby</a>
+      <footer className="footer">
+        Copyright © <a href="https://www.jayoon.work">Jayoon Kong</a> {new Date().getFullYear()},
+        all right reserved.
       </footer>
     </div>
   )
