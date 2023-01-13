@@ -2,6 +2,7 @@
 title: "V 컬러링에 React Query 도입하기"
 date: "2022-04-28"
 tags: ["V컬러링", "React Query", "react-query"]
+author: "cony"
 ---
 
 [이전 포스트](https://jayoon-kong.github.io/swr-react_query/)에서도 언급했듯이 현재 V 컬러링의 API는 조회성임에도 불구하고 POST 메소드가 대부분입니다. 가볍게 도입할 수 있는 SWR도 매력적이지만 React Query를 도입하기로 결정한 가장 큰 이유입니다. 그리고 리서치를 하다 보니 React Query가 아무래도 인기도 많고 reference도 많아 실제로 적용하기에도 좋을 것 같았습니다.

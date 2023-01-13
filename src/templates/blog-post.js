@@ -28,7 +28,7 @@ const BlogPostTemplate = ({
         />
         <hr />
         <footer>
-          <Bio />
+          <Bio author={post.frontmatter.author} />
         </footer>
       </article>
       <nav className="blog-post-nav">
@@ -91,6 +91,7 @@ export const pageQuery = graphql`
         title
         date(formatString: "MMMM DD, YYYY")
         description
+        author
       }
     }
     previous: markdownRemark(id: { eq: $previousPostId }) {

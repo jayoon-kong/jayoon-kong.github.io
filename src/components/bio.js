@@ -5,47 +5,20 @@
  * See: https://www.gatsbyjs.com/docs/how-to/querying-data/use-static-query/
  */
 
+import { Link } from "gatsby";
 import * as React from "react"
-import { useStaticQuery, graphql } from "gatsby"
-import { StaticImage } from "gatsby-plugin-image"
+import { useAuthor } from "../hooks/useAuthor";
 
-const Bio = () => {
-  const data = useStaticQuery(graphql`
-    query BioQuery {
-      site {
-        siteMetadata {
-          author {
-            name
-            summary
-          }
-          social {
-            twitter
-          }
-        }
-      }
-    }
-  `)
-
-  // Set these values by editing "siteMetadata" in gatsby-config.js
-  const author = data.site.siteMetadata?.author
-  const social = data.site.siteMetadata?.social
-
+const Bio = ({ author }) => {
+  const { name, description, thumbnail, link } = useAuthor(author);
   return (
     <div className="bio">
-      <StaticImage
-        className="bio-avatar"
-        layout="fixed"
-        formats={["auto", "webp", "avif"]}
-        src="../images/profile.jpg"
-        width={50}
-        height={50}
-        quality={95}
-        alt="Profile picture"
-      />
-      {author?.name && (
+      <img src={thumbnail} alt="profile" className="bio-avatar" />
+      {author && (
         <p>
-          <strong>{author.name}</strong><br />{author?.summary || null}
-          {` `}
+          {link ? <Link to={link} target="_blank"><strong>{name}</strong></Link> : <strong>{name}</strong>}
+          <br />
+          {description}
         </p>
       )}
     </div>
