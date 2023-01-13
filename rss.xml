@@ -1,4 +1,265 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Gatsby Starter Blog RSS Feed]]></title><description><![CDATA[공자윤의 기술블로그]]></description><link>https://jayoon-kong.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 13 Jan 2023 09:08:36 GMT</lastBuildDate><item><title><![CDATA[AWS로 쉽게 내 포트폴리오 web에 배포하기]]></title><description><![CDATA[개발자라면 누구나 포트폴리오 하나쯤은 있어야죠! 아직 이직 생각은 없지만 저도 포트폴리오를 한 번 만들어 볼까 하고 검색을 하다가 aws amplify라는 것을 알게 되었습니다. aws amplify…]]></description><link>https://jayoon-kong.github.io/aws/</link><guid isPermaLink="false">https://jayoon-kong.github.io/aws/</guid><dc:creator><![CDATA[jayoon]]></dc:creator><pubDate>Thu, 22 Dec 2022 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;개발자라면 누구나 포트폴리오 하나쯤은 있어야죠! &lt;del&gt;아직 이직 생각은 없지만&lt;/del&gt; 저도 포트폴리오를 한 번 만들어 볼까 하고 검색을 하다가 aws amplify라는 것을 알게 되었습니다.&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Gatsby Starter Blog RSS Feed]]></title><description><![CDATA[공자윤의 기술블로그]]></description><link>https://jayoon-kong.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 13 Jan 2023 10:01:59 GMT</lastBuildDate><item><title><![CDATA[Gatsby로 기술 블로그 만들기]]></title><description><![CDATA[…]]></description><link>https://jayoon-kong.github.io/gatsby/</link><guid isPermaLink="false">https://jayoon-kong.github.io/gatsby/</guid><dc:creator><![CDATA[jayoon]]></dc:creator><pubDate>Fri, 13 Jan 2023 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;회사에서 기술 블로그를 만든다는 소식을 듣고, 데모 사이트를 한 번 만들어 보기로 하였습니다.&lt;/p&gt;
+&lt;p&gt;가독성이 좋고 코드 블록 사용이 가능해야 하며, 심플하면서도 효율적으로 (적은 비용으로 빠르게!) 만들어야 한다는 요구사항에 따라 리서치를 해본 결과, 서버나 DB 없이도 빠르게 정적 사이트를 만들고 배포할 수 있는 솔루션이 있다는 것을 알게 되었습니다.&lt;/p&gt;
+&lt;p&gt;가장 많이 사용하는 것이 Jekyll과 Gatsby였는데요, 저는 React가 편하기 때문에 React로 되어 있는 Gatsby를 사용하기로 하였습니다. (리서치에 도움을 주신 jojiiiiiyoung님께 &lt;del&gt;혹시 이 글을 보신다면&lt;/del&gt; 감사의 말씀 전해드립니다!)&lt;/p&gt;
+&lt;p&gt;Gatsby는 React와 GraphQL을 이용하여, Markdown 형태의 파일을 빠르게 새로운 HTML로 빌드해 주는 정적 사이트 생성기(Static Site Generator)입니다. 아래 그림을 보면 이해가 쉽습니다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/35e7e627da9ee882f4eebd966e6fdf28/a8c87/gatsby_1.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 90.50632911392405%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAASCAYAAABb0P4QAAAACXBIWXMAABYlAAAWJQFJUiTwAAACPklEQVR42n1UTW/TQBD1X4Ybx/4D+AVwQAgJceOChBBI0APqpQiKmtCE5qtJ2sR2HNu73p19MLPetfsRVhrv2H7z/HZmPIlzDryICGQJRM6btfJcDV4j/fQI6w+PUZ29jFheTnAhjuQ+abRBWSghYXJrCdZYmMZA1RbF9CeKi8/Q82PYdABrHZrGoNprmIY/6uOYlGOTIq3x69sM6WoP9gMxf3E9yzA83eByWGJfAOUebaDF+McKi9FWYvJNBV0bIU9U3eB6nmM9y5FvyngEVs4KWGmjFFRZQZUaxlhRmN2UEsOxVaEEzyISOZ6xckx/VE9i2ufs88HEwvsQY1vrcSRck7Yucfe+P7oUZvwe6uJdD+Tg4/iCzge8QrZA4Cjs1KpwqIZvUA9egQsfsdRhOe9RoeREm9ukrqscr8VEYTZW4h/EEncHdYR3gb4fPeHbZ8d4cfQxEnos3SNli4Sc7IdIeZ2fLHB+MuWWjrhDSiWHXYvcJ2Ulu22NKt/DNtw2dEfAbaUJX8LL26QUm1yq2l6lL/8jIAkV65P29+y6xG5TYrvcIV0X8nsdEtARtlXq5yf4mu+Ng9Yu/g3UE+CxbU75X+4a2D1YNUcWTmWgOuswh7CsMI6tOLp6O3+HHLKvR8i/PAEsTyXEcdWNvC4+6UtXVQOtDHTdgIeGroHR76cYfX+O+dkCq8nWYxmj/B5iQ5oSTiabbqfOaprJ7q3AZHiK+XiMq8sSyz8p1tMM22WBm8UOm6tCfI4Vnn85/AumkHrnlOJV5AAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;gatsby_1&quot;
+        title=&quot;&quot;
+        src=&quot;/static/35e7e627da9ee882f4eebd966e6fdf28/f058b/gatsby_1.png&quot;
+        srcset=&quot;/static/35e7e627da9ee882f4eebd966e6fdf28/c26ae/gatsby_1.png 158w,
+/static/35e7e627da9ee882f4eebd966e6fdf28/6bdcf/gatsby_1.png 315w,
+/static/35e7e627da9ee882f4eebd966e6fdf28/f058b/gatsby_1.png 630w,
+/static/35e7e627da9ee882f4eebd966e6fdf28/40601/gatsby_1.png 945w,
+/static/35e7e627da9ee882f4eebd966e6fdf28/78612/gatsby_1.png 1260w,
+/static/35e7e627da9ee882f4eebd966e6fdf28/a8c87/gatsby_1.png 1538w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Gatsby를 사용해서 만들면 github 사이트에 배포하는 것까지 아주 쉽고 편리하게 할 수 있습니다. 실제로 데모 사이트를 만드는 데 (배포 삽질 포함해서) 단 이틀밖에 걸리지 않았습니다. 데모 사이트는 여기를 참고해 주세요.&lt;/p&gt;
+&lt;p&gt;(&lt;a href=&quot;https://jayoon-kong.github.io&quot;&gt;공자윤의 기술 블로그&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;Gatsby에서는 수많은 템플릿을 지원하고 있는데요, 저는 가장 많이 쓰이는 Gatsby-starter-blog 테마를 사용하였습니다. 정말 깔끔하면서도 기본적인 기능은 거의 다 지원하고 있더라구요. 실제로 사용하면서 디자인 커스터마이징을 하기도 무척 쉬웠습니다.&lt;/p&gt;
+&lt;p&gt;우선 Gatsby를 사용하기 위해서는 Node.js 18 버전 이상이 필요하여 노드 버전을 업데이트하였습니다.&lt;/p&gt;
+&lt;p&gt;그리고 gatsby-cli를 설치해 주었습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;powershell&quot;&gt;&lt;pre class=&quot;language-powershell&quot;&gt;&lt;code class=&quot;language-powershell&quot;&gt;npm i gatsby-&lt;span class=&quot;token function&quot;&gt;cli&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;g&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;다음으로는 Gatsby-starter-blog 테마를 이용하여 저의 블로그를 로컬에 생성하였습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;powershell&quot;&gt;&lt;pre class=&quot;language-powershell&quot;&gt;&lt;code class=&quot;language-powershell&quot;&gt;gatsby new jayoon-blog https:&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;github&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;com/gatsbyjs/gatsby-starter-blog&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;(jayoon-blog는 프로젝트 이름, 뒤의 주소는 선택하고 싶은 테마입니다. Gatsby에서는 무수히 많은 블로그용 테마를 제공하고 있습니다.)&lt;/p&gt;
+&lt;p&gt;생성된 jayoon-blog 폴더를 열고 &lt;code class=&quot;language-text&quot;&gt;npm run start&lt;/code&gt;를 하면 아래와 같은 사이트가 나옵니다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/538b7d7a91a186a7a1d5bf54bc120bba/d4e7f/gatsby_2.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 75.31645569620254%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAABYlAAAWJQFJUiTwAAABq0lEQVR42qVUy27iMBTl8zMrBFsWrGDDkj0/gNSuWNB2yrykKH47zsN2Es7Ibl0RWrWMxtKJr+/VPbrPTADgfD6HC9ZaGGMilFLxds6BMfZmq6oq6pJf8k1nEj7DMMTH6XTCYrHAcrnEarVClmXY7XaYzWaYz+dYr9eYTqc4HA5Ifp8SHo9HfMsybDYbbLdbSCnRtm2013WNvu/f3peZXZJOLhVcCNzd3WO/38fIbjkfRpiUlZbIfzzB+w5N0yDPcxSEgAkFJmQElyoi1PLLCKUQeHx4hAxOXEAIAalLCNOA6RqirKOsqjamn5ryjvCj0G9N9zrKUYSm9XguSjwTg++kgqz9P9dxRFg3LfKCgEsNoUro0sTuBoSaJYT6Jv1lxwNGhN45aCleoASk4KCUxsEOIKFBjMXaBr3WepTye8J+QNl2MLaDbjrYbvi/lJVpcPxV4DfV+MMqqMpiGHp0XRfRB/Svb/8iXzdnROisBScEglJwUkByDkooKCEgBXmVKWhB4l6HrfmUMBTYOR+XP/wMvPcjOOuiLcg3bUqoXRiXn7z+cmSuZzBF+BemzYgbe8NOKwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;gatsby_2&quot;
+        title=&quot;&quot;
+        src=&quot;/static/538b7d7a91a186a7a1d5bf54bc120bba/f058b/gatsby_2.png&quot;
+        srcset=&quot;/static/538b7d7a91a186a7a1d5bf54bc120bba/c26ae/gatsby_2.png 158w,
+/static/538b7d7a91a186a7a1d5bf54bc120bba/6bdcf/gatsby_2.png 315w,
+/static/538b7d7a91a186a7a1d5bf54bc120bba/f058b/gatsby_2.png 630w,
+/static/538b7d7a91a186a7a1d5bf54bc120bba/40601/gatsby_2.png 945w,
+/static/538b7d7a91a186a7a1d5bf54bc120bba/78612/gatsby_2.png 1260w,
+/static/538b7d7a91a186a7a1d5bf54bc120bba/d4e7f/gatsby_2.png 1416w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;아주 심플하게 타이틀과 저자 소개, 그리고 3건의 포스팅으로 구성이 되어 있었습니다. 처음에 마크다운이라는 것을 모르고 글 등록을 어떻게 해야 하나 한참을 찾아보았는데요, 마크다운 파일을 생성해서 그냥 정해진 경로에 업로드만 하면 저렇게 사이트에 배포가 되는 구조였습니다.&lt;/p&gt;
+&lt;p&gt;시험삼아 기존 노션에 있던 포스팅 중 몇 개를 가져와 마크다운(.md) 파일로 생성해 보았습니다. 헤드라인 및 이미지, 코드 블록 등의 스타일도 잘 되어 있고 가이드도 친절해서 어렵지 않게 작성할 수 있었고, 노션에서 쓸 수 있는 기능은 거의 제공되었기 때문에 가독성 있고 깔끔하게 작성이 가능하였습니다.&lt;/p&gt;
+&lt;p&gt;다음은 호스팅을 위해 github에 새로운 계정으로 가입하였습니다. github은 public으로 저장소를 생성하면 무료로 &lt;a href=&quot;http://github.io&quot;&gt;github.io&lt;/a&gt; 주소를 제공해 주는데요, 만약 ${내 계정}.github.io 주소를 이용하고 싶다면 저장소 이름을 반드시 &lt;code class=&quot;language-text&quot;&gt;${내 계정}.github.io&lt;/code&gt; 형태로 저장해야 합니다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/702200b6f43c784ebf4da34c3253e3f9/6bbf7/gatsby_3.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 35.44303797468354%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAABYlAAAWJQFJUiTwAAABJklEQVR42pWRUU+CcBTFGZYiigIKijpAQBQTIk1Lc6Vr+VK99P2/y6/xd7a27MGHs92zc3fuPfdK4ThludmRztek80fy5ZZ216XWtNCMDnXdvghSEKfsDh8sN3setq+snva0u54QC8NLIZVVHalURS7Xka9rlCoaSt1EbbSPTWYXzfiLhnkekh9NyRYbptmSm3xFcYJJuiCcZKLhNPm/iEf9V+SBHwujKLklHGe4QcIoyfHChKrWEjgXrRjWbDk/RicuVVQDq+viBRM6PR93OKbvRoKH8Qx3OKGsNJBkBbk4zZUqak23uVs98/b+xe7wyfrlQM+LkQrBdjycQYBpD7Acj743Etx2fPHxat2kouooqoFSM0RdbOSPZiTZPePZgijJsXo+3+gVtLDvQf6+AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;gatsby_3&quot;
+        title=&quot;&quot;
+        src=&quot;/static/702200b6f43c784ebf4da34c3253e3f9/f058b/gatsby_3.png&quot;
+        srcset=&quot;/static/702200b6f43c784ebf4da34c3253e3f9/c26ae/gatsby_3.png 158w,
+/static/702200b6f43c784ebf4da34c3253e3f9/6bdcf/gatsby_3.png 315w,
+/static/702200b6f43c784ebf4da34c3253e3f9/f058b/gatsby_3.png 630w,
+/static/702200b6f43c784ebf4da34c3253e3f9/6bbf7/gatsby_3.png 716w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;이렇게 저장을 하고 조금 기다린 후, Settings의 pages 메뉴로 들어가면 다음과 같이 내 사이트가 생성된 것을 확인할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/7247913f0f8a7f1af7945912a6ba27d4/49ee2/gatsby_4.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 23.417721518987342%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAABYlAAAWJQFJUiTwAAAA5ElEQVR42o3PzU6EMBQFYLbqAB2g9OdSKIXCgDMaiBkdExPf/6WOoXFYuXDxpb3JzTltdFnf4acXvL59guyAhzjHgZV4Svm/bfvxUQQRNyfk5EF2BDU9Cml2XNbgqoagFoWsUWob8F/3ORdmDw2BopmhTI/KTdB2grITdDuD3DPIzdB1D0EO0nSgxkNWLlCmQ2WHEJpkMohaf0Z/uWFabnDLN8rxC3q4ohqvEN0Kpjwek2L/3v2+nazQ8POC8/qBptuKPaI4kzgcFVJOYJzCs5NMIM0EEsYRM763/2ULzcoKaa6CH0rOgZsN4FUhAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;gatsby_4&quot;
+        title=&quot;&quot;
+        src=&quot;/static/7247913f0f8a7f1af7945912a6ba27d4/f058b/gatsby_4.png&quot;
+        srcset=&quot;/static/7247913f0f8a7f1af7945912a6ba27d4/c26ae/gatsby_4.png 158w,
+/static/7247913f0f8a7f1af7945912a6ba27d4/6bdcf/gatsby_4.png 315w,
+/static/7247913f0f8a7f1af7945912a6ba27d4/f058b/gatsby_4.png 630w,
+/static/7247913f0f8a7f1af7945912a6ba27d4/40601/gatsby_4.png 945w,
+/static/7247913f0f8a7f1af7945912a6ba27d4/78612/gatsby_4.png 1260w,
+/static/7247913f0f8a7f1af7945912a6ba27d4/49ee2/gatsby_4.png 1618w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;로컬 저장소를 github에 연결하고 commit 및 push를 하였습니다. 기존에 포트폴리오용으로 사용하던 AWS Amplify는 사실 여기까지만 하면 바로 배포가 실행되었는데, github은 그렇게 하기 위해서는 몇 가지 작업을 더 해줘야 합니다. (Github Action을 사용해서 yml 파일을 생성하면 자동배포가 가능합니다.)&lt;/p&gt;
+&lt;p&gt;우선 저는 수동 배포를 하기 위해 gh-pages라는 라이브러리를 설치하고,  &lt;code class=&quot;language-text&quot;&gt;package.json&lt;/code&gt;에 deploy 명령을 추가해 주었습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;powershell&quot;&gt;&lt;pre class=&quot;language-powershell&quot;&gt;&lt;code class=&quot;language-powershell&quot;&gt;npm i gh-pages &lt;span class=&quot;token operator&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;save-dev&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;javascript&quot;&gt;&lt;pre class=&quot;language-javascript&quot;&gt;&lt;code class=&quot;language-javascript&quot;&gt;&lt;span class=&quot;token string-property property&quot;&gt;&quot;scripts&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;token string-property property&quot;&gt;&quot;deploy&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;gatsby build &amp;amp;&amp;amp; gh-pages -d public -b gh-pages&quot;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;이 명령어는 빌드를 한 이후에 gh-pages라는 브랜치로 배포를 하겠다는 의미입니다. 저는 처음에 왜 gh-pages로 해야 하는지 모르고 로컬 master에서 그냥 원격 master 브랜치로 배포했는데요, 그랬더니 제 소스들은 온데간데없이 사라지고 master 브랜치에는 chunk 형태의 정적 파일들이 잔뜩 들어가 있는 모습을 볼 수 있었습니다. 검색해 보니 Gatsby에서는 모든 정적 파일들을 기본 브랜치에 저장하도록 되어 있다는 사실을 알게 되었습니다. (이 과정에서 가장 시간이 많이 걸렸습니다.) 그래서 gh-pages라는 브랜치를 생성하고, 배포가 되는 기본 브랜치를 gh-pages로 설정한 후, master에서 작업한 파일을 gh-pages로 배포하도록 처리해 두면 master 브랜치는 깨끗한 소스로 관리되고 정적인 리소스들은 gh-pages 브랜치로 올라가기 때문에 쉽게 형상관리를 할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;(추후에는 yml 파일을 등록하여 merge 시 자동 배포가 되도록 처리할 예정입니다.)&lt;/p&gt;
+&lt;p&gt;일단 npm run deploy로 원격 저장소에 push된 버전의 소스를 배포하였습니다. (디자인 요소들은 조금씩 수정했고, 헤더는 추가로 개발한 상태입니다.)&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/a3846d749bf77a25a74b9363104638e1/baa75/gatsby_5.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 103.79746835443038%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAVCAYAAABG1c6oAAAACXBIWXMAABYlAAAWJQFJUiTwAAACHElEQVR42p1Vy5KbMBD0//9VjjnltNcsLE/zNCAB4uFJda8HE1uXRFVdEqPRVKtnRlz6Xx/S/vgp4zjKMAzSdZ0syyIY9/udwFjXVbZt4x5mfCvO/hdTVNLGqbjZyTRNYozhgdex7zuhATFrQOfcM6AewMY8z9zUwABsYG+t5Yygyvx8A11f1NC2rURRJGmayvV6lSzLuIYd30mSSFEUsnvYawyMI+A4TtLeOhmM4XqaZpmdIyvMC2/gyBQ+dhzFGCvGWj/Drusly69S1Y3UdSNlVRN100rTtLQ97RVtIABJvAHBqu+Hl+ytD20dtdWEAK/6vV0ZJQPNoF1ZlkSe54d+sGMNwNen4V8MkVkwhC5go0y+scv6WD/LZeMNkPVz0CMgNPn9GUocpxLFCdfhVySfQShJmhFplnM/CCOuYSvKys8Q4oKhtaNMrL2JGez6nhnVwob/uRZ1/RYQuqhGqiXg6xrfeLsy6g1l0fc99QRg0x7W/uV89PIm20nDt7Ipy4p1hlo8itdaygBAEvipHIOx9PEydMsiw2B46NZ17BRkFEDWoTGg7BWweTWsqoq93DQNaxDfOsdxzD6GtmEYShAE9IWN/X269hEQ1HGV/xneToEmqCnoR7CPGynKksmCDfuQ43bruA95AG9SoFM/fDtgNo/3Tw+pvucO0tr0BkQdQh9997SfUZfQ8Z+vjBcFzJC18z/j9XXx4czwDwLDYkgwU0inAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;gatsby_5&quot;
+        title=&quot;&quot;
+        src=&quot;/static/a3846d749bf77a25a74b9363104638e1/f058b/gatsby_5.png&quot;
+        srcset=&quot;/static/a3846d749bf77a25a74b9363104638e1/c26ae/gatsby_5.png 158w,
+/static/a3846d749bf77a25a74b9363104638e1/6bdcf/gatsby_5.png 315w,
+/static/a3846d749bf77a25a74b9363104638e1/f058b/gatsby_5.png 630w,
+/static/a3846d749bf77a25a74b9363104638e1/40601/gatsby_5.png 945w,
+/static/a3846d749bf77a25a74b9363104638e1/78612/gatsby_5.png 1260w,
+/static/a3846d749bf77a25a74b9363104638e1/baa75/gatsby_5.png 1746w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;이렇게 깔끔하게 기술블로그가 탄생하게 되었습니다. 😎&lt;/p&gt;
+&lt;p&gt;글을 클릭하면 포스팅 상세 페이지로 이동을 하게 됩니다. 마크다운 파일이 위치한 폴더 이름이 URI의 pathname이 되고, 모든 파일이 html로 빌드되기 때문에 검색엔진에 노출이 가능합니다.&lt;/p&gt;
+&lt;p&gt;아래에는 저자 정보도 소개가 되는데 이 부분 역시 템플릿에서 쉽게 수정할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/168d8c89aa2f6e9d055f3b181e913159/062c8/gatsby_6.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 46.202531645569614%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAJCAYAAAAywQxIAAAACXBIWXMAABYlAAAWJQFJUiTwAAABJElEQVR42pVR206EMBDl//wD33z1K/SvfPTdxER90d2Ne2GBtkCXlqWUQDlmxmhCRIyTHE5pp2fOTKMQAqTKGUWpkQnJEFKhKEpeS6mYlcqRpBmv42OCLPvMoz0hJPq+RzQMgRP2hyMf7vYxc5oJvpQXJc7nMypjYKxFVRnYuoY+VQz61/rEe2QuGscRzjm0hLaFcy2879B6j8Y5DMOA/wQLLkUYR648hMC8BNKK6NL74z12D3fcVnw4YLvdIkkS/FVs1iF9bq8vcXN1AaUUXt9WeHp+wXq9QVlqBs2JHswYy04oqNgcWHC13jB+tBtG0KNRIs2S8OX6N/c8w67roLVGmqaQUjILISZM7q0xi2LfLTdNA2MM6rqewFo7Ye/9pN05wQ81+7W6Bi/+CAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;gatsby_6&quot;
+        title=&quot;&quot;
+        src=&quot;/static/168d8c89aa2f6e9d055f3b181e913159/f058b/gatsby_6.png&quot;
+        srcset=&quot;/static/168d8c89aa2f6e9d055f3b181e913159/c26ae/gatsby_6.png 158w,
+/static/168d8c89aa2f6e9d055f3b181e913159/6bdcf/gatsby_6.png 315w,
+/static/168d8c89aa2f6e9d055f3b181e913159/f058b/gatsby_6.png 630w,
+/static/168d8c89aa2f6e9d055f3b181e913159/40601/gatsby_6.png 945w,
+/static/168d8c89aa2f6e9d055f3b181e913159/78612/gatsby_6.png 1260w,
+/static/168d8c89aa2f6e9d055f3b181e913159/062c8/gatsby_6.png 1386w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;회사용 블로그에서는 저 말고 다른 저자들의 정보가 등록될 수 있어야 하기 때문에 샘플로 멤버 리스트를 만들어 보았습니다. js 파일마다 위치한 graphQl 쿼리를 이용하여 정보를 가져올 수 있습니다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/4c63736edb43219ea5837d8e740e3326/37048/gatsby_7.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 60.12658227848101%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAMCAYAAABiDJ37AAAACXBIWXMAABYlAAAWJQFJUiTwAAABVklEQVR42qVSW26DMBD0/e/SA/QQ6UPqZyrCwzY2OAGn4WVgql0aqrRp1KqWRruzHg3rZcWpabB5fEaSSvz3zPMMMY4Tau9xOjXohwFd16HvewzDgBAC51Q717uuR8v5gO5D17YtczpiCAFSaejccJRSw9oCeW6gdM48zSR2cbpwlSOTirW5sTC2QJxkyDKFpmkh6AtsYCxsUbK4KB0L6SOUO7fnfDHUfKdUztz7I8Zx5E4JYp5mjNPERUI4I4S1RmPhu7DcrdowYprnizkKHuaNIV8CV/k0LVh+Sn2Eu7vH2+YFlT/CGIvta4TS7VfTvxwxVR7xwxOq7Q6u/JyV1jnP5HqnP+Pmk39j9vUVgogrHay1K4wxHKuq+tUyXzyZFjaOY0YURUiSZEWapmwupYRSijUUtdZwzvGif+uQ1uNwOKCua3jvOZ45ReqSIoFMzjlprxm+AxywokvmoeFcAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;gatsby_7&quot;
+        title=&quot;&quot;
+        src=&quot;/static/4c63736edb43219ea5837d8e740e3326/f058b/gatsby_7.png&quot;
+        srcset=&quot;/static/4c63736edb43219ea5837d8e740e3326/c26ae/gatsby_7.png 158w,
+/static/4c63736edb43219ea5837d8e740e3326/6bdcf/gatsby_7.png 315w,
+/static/4c63736edb43219ea5837d8e740e3326/f058b/gatsby_7.png 630w,
+/static/4c63736edb43219ea5837d8e740e3326/40601/gatsby_7.png 945w,
+/static/4c63736edb43219ea5837d8e740e3326/78612/gatsby_7.png 1260w,
+/static/4c63736edb43219ea5837d8e740e3326/37048/gatsby_7.png 1352w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;마크다운 파일에 데이터만 잘 등록해 주면 아주 쉽게 위와 같이 구현이 가능합니다.&lt;/p&gt;
+&lt;p&gt;이로써 블로그를 만들 준비를 모두 마쳤습니다. 이제 디자인 적용과 개발자를 위한 템플릿 작성 가이드, 그리고 운영자를 위한 배포 가이드만 만드는 일만 남았네요.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[AWS로 쉽게 내 포트폴리오 web에 배포하기]]></title><description><![CDATA[개발자라면 누구나 포트폴리오 하나쯤은 있어야죠! 아직 이직 생각은 없지만 저도 포트폴리오를 한 번 만들어 볼까 하고 검색을 하다가 aws amplify라는 것을 알게 되었습니다. aws amplify…]]></description><link>https://jayoon-kong.github.io/aws/</link><guid isPermaLink="false">https://jayoon-kong.github.io/aws/</guid><dc:creator><![CDATA[jayoon]]></dc:creator><pubDate>Thu, 22 Dec 2022 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;개발자라면 누구나 포트폴리오 하나쯤은 있어야죠! &lt;del&gt;아직 이직 생각은 없지만&lt;/del&gt; 저도 포트폴리오를 한 번 만들어 볼까 하고 검색을 하다가 aws amplify라는 것을 알게 되었습니다.&lt;/p&gt;
 &lt;p&gt;aws amplify는 간단히 말하자면 나의 리액트 프로젝트를 서버 없이 아주 간편하게 웹에 배포할 수 있게 해 주는 솔루션입니다. 프로젝트를 내 저장소(github)에 올리고 커밋과 푸시를 하면 자동으로 내가 연결한 호스팅 서버로 배포를 해주는 시스템이죠. 심지어 구매한 도메인과 연결하는 것도 아주 편하게 할 수 있습니다.&lt;/p&gt;
 &lt;p&gt;AWS Amplify 콘솔에 대한 설명은 다음과 같습니다.&lt;/p&gt;
 &lt;p&gt;&lt;a href=&quot;https://aws.amazon.com/ko/amplify/&quot;&gt;AWS Amplify 콘솔&lt;/a&gt;은 단일 페이지 웹 애플리케이션이나 서버리스 백엔드가 포함된 정적 사이트를 개발, 배포 및 호스팅하기 위한 Git 기반의 CI/CD 워크플로를 제공합니다. Amplify는 Git 리포지토리에 연결 시 프런트엔드 프레임워크와 &lt;a href=&quot;https://aws-amplify.github.io/docs/cli/concept&quot;&gt;Amplify CLI&lt;/a&gt;를 사용하여 구성된 모든 서버리스 백엔드 리소스의 빌드 설정을 결정하고 코드가 커밋될 때마다 업데이트를 자동으로 배포합니다.&lt;/p&gt;
