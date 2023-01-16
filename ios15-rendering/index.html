@@ -36,7 +36,7 @@
   </a>
     </span></p>
 <p>(왼쪽이 홈 화면, 오른쪽이 아래위로 스와이프하면서 전체 화면으로 영상을 볼 수 있는 플레이어 화면입니다.)</p>
-<p>V 컬러링은 기본적으로 모든 영상이 자동 재생되고 있습니다. 하지만 <a href="https://jayoon-kong.github.io/first/">지난 포스트</a>에서도 언급했듯이 iOS에서는 사용자가 액션을 취하기 전에는 음소거 재생이 원칙이기 때문에, 음소거 모드를 해제하고 스와이프를 했을 때 다음 영상에서 소리가 재생되도록 하기 위해 안드로이드와 약간 다른 렌더링 방식을 사용합니다.</p>
+<p>V 컬러링은 기본적으로 모든 영상이 자동 재생되고 있습니다. 하지만 <a href="https://jayoon-kong.github.io/ios-rendering/">지난 포스트</a>에서도 언급했듯이 iOS에서는 사용자가 액션을 취하기 전에는 음소거 재생이 원칙이기 때문에, 음소거 모드를 해제하고 스와이프를 했을 때 다음 영상에서 소리가 재생되도록 하기 위해 안드로이드와 약간 다른 렌더링 방식을 사용합니다.</p>
 <p>처음 이슈를 발견했을 때 저는 이러한 구조적 차이점에 원인이 있다고 판단해서, 안드로이드와 iOS의 서로 다른 구현 방식을 분석했습니다. 구현되어 있는 구조를 간단히 설명하자면, 안드로이드는 스와이퍼 내부에 비디오를 컨트롤하는 컴포넌트를 넣어 현재 보고 있는 영상 직전/직후의 썸네일을 미리 받아와서 스와이프를 할 때 보다 빠르게 화면에 렌더링을 하는 반면, iOS는 안드로이드와 같은 구현 방식을 사용하면 재생 시 자동으로 음소거가 되어 버리는 문제점이 있기 때문에 비디오를 컨트롤하는 영역을 따로 분리해서 스와이프가 된 이후 하나씩 영상을 재생하며 소리를 켜는 방식을 사용하고 있습니다. 그래서 iOS를 안드로이드와 동일한 방식으로 구현해 보기도 하고, 재생되는 시점의 데이터를 하나 하나 확인해 보며 원인을 파악해 보려고 애썼지만 어떤 방법으로도 해결이 되지 않았습니다.</p>
 <p>여러 가지 방법을 시도해 보다가 slide change event가 일어나는 시점을 살펴보았습니다.</p>
 <p>사용자에게 아무것도 렌더링되지 않은 화면을 보여주지 않기 위해 현재 스와이핑이 되는 과정, 즉 slide change event가 일어나는 시점에도 썸네일을 배경으로 보여주고 있었는데요,</p>
@@ -347,4 +347,4 @@
           >
             window.___chunkMapping="{\"app\":[\"/app-bd7285e6a5556c024dbc.js\"],\"component---src-pages-404-js\":[\"/component---src-pages-404-js-6c074476c5b9d2fcf27d.js\"],\"component---src-pages-index-js\":[\"/component---src-pages-index-js-65823324cc07f8cd35d1.js\"],\"component---src-pages-profile-js\":[\"/component---src-pages-profile-js-ba6a239225dfdbc2aa99.js\"],\"component---src-pages-project-js\":[\"/component---src-pages-project-js-65c6f5ea4640d8cda357.js\"],\"component---src-pages-seminar-js\":[\"/component---src-pages-seminar-js-1b499898e2c3ba22d6e5.js\"],\"component---src-pages-using-typescript-tsx\":[\"/component---src-pages-using-typescript-tsx-dbd1e9bbd9f2610a754f.js\"],\"component---src-templates-blog-post-js\":[\"/component---src-templates-blog-post-js-5ae2d9f49c921f7c7cdc.js\"]}";
           </script>
-        <script>window.___webpackCompilationHash="794b427854cdcb349788";</script><script src="/webpack-runtime-a0a0456ec6cfcf6f9738.js" async></script><script src="/framework-0ff3ad83d0d20e5cd061.js" async></script><script src="/app-bd7285e6a5556c024dbc.js" async></script><!-- slice-end id="_gatsby-scripts-1" --></body></html>
+        <script>window.___webpackCompilationHash="764615a06d523fafd92e";</script><script src="/webpack-runtime-a0a0456ec6cfcf6f9738.js" async></script><script src="/framework-0ff3ad83d0d20e5cd061.js" async></script><script src="/app-bd7285e6a5556c024dbc.js" async></script><!-- slice-end id="_gatsby-scripts-1" --></body></html>
