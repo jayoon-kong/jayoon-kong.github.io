@@ -1,5 +1,5 @@
 import * as React from "react"
-import { PROJECT } from '../project';
+import { PROJECT } from "../pages/project"
 
 const ProjectDetail = ({ childKey }) => (
   <div key={childKey} className="project-detail">
