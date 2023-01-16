@@ -1,4 +1,4 @@
-export const PROJECT = [
+export const PROJECT_LIST = [
   {
     name: 'V 컬러링',
     subject: `통신사에서 제공하는 부가서비스로, 원하는 동영상 컬러링을 상대방의 단말에 보여주는 서비스\n(http://vcoloring.com) mobile only`,
