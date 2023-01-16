@@ -3,6 +3,7 @@ title: "Gatsby로 기술 블로그 만들기"
 date: "2023-01-13"
 tags: ["Gatsby", "blog", "github"]
 author: "jayoon"
+description: "gatsby로 블로그(blog)를 만드는 방법 소개"
 ---
 
 회사에서 기술 블로그를 만든다는 소식을 듣고 데모 사이트를 한 번 만들어 보기로 하였습니다.
