@@ -3,6 +3,7 @@ import { useCallback, useMemo, useState } from "react";
 import { graphql } from "gatsby"
 import Layout from "../components/layout";
 import ProjectDetail from "../components/project-detail";
+import Seo from "../components/seo";
 
 const Project = ({ data, location }) => {
   const siteTitle = data.site.siteMetadata?.title
@@ -96,6 +97,14 @@ const Project = ({ data, location }) => {
         </ul>
       </div>
     </Layout>
+  )
+}
+
+export const Head = () => {
+  return (
+    <Seo
+      title="공자윤의 프로젝트"
+    />
   )
 }
 

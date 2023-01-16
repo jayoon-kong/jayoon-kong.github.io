@@ -1,6 +1,7 @@
 import * as React from "react"
 import { Link, graphql } from "gatsby"
 import Layout from "../components/layout"
+import Seo from "../components/seo"
 
 const BlogIndex = ({ data, location }) => {
   const siteTitle = data.site.siteMetadata?.title || `Title`
@@ -53,6 +54,14 @@ const BlogIndex = ({ data, location }) => {
         })}
       </ol>
     </Layout>
+  )
+}
+
+export const Head = () => {
+  return (
+    <Seo
+      title="공자윤의 기술블로그"
+    />
   )
 }
 
