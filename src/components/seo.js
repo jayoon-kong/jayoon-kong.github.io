@@ -43,6 +43,7 @@ const Seo = ({ description, title, children }) => {
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={metaDescription} />
       <meta name="google-site-verification" content="vMqBtqtAuaCt-E77Hy3kVwYFp3Ve9kaAMI1cBnYSfa4" />
+      <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumsquare.css"></link>
       {children}
     </>
   )

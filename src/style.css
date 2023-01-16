@@ -27,11 +27,11 @@
   --spacing-20: 5rem;
   --spacing-24: 6rem;
   --spacing-32: 8rem;
-  --fontFamily-sans: "나눔고딕", "MontserratVariable", system-ui, -apple-system,
+  --fontFamily-sans: "NanumSquare", "나눔고딕", "MontserratVariable", system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
     sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
     "Noto Color Emoji";
-  --fontFamily-serif: "나눔고딕", "Merriweather", "Georgia", Cambria, "Times New Roman",
+  --fontFamily-serif: "NanumSquare", "나눔고딕", "Merriweather", "Georgia", Cambria, "Times New Roman",
     Times, serif;
   --font-body: var(--fontFamily-serif);
   --font-heading: var(--fontFamily-sans);
@@ -309,26 +309,6 @@ main {
   font-family: var(--font-heading);
   text-decoration: none;
   font-size: var(--fontSize-2);
-}
-
-.intro {
-  margin: var(--spacing-20) 0;
-}
-
-.intro h2 {
-  font-family: "MontserratVariable";
-  font-weight: normal;
-  margin-bottom: var(--spacing-2);
-  color: darkgreen;
-}
-
-.intro p {
-  margin: 0;
-}
-
-.intro a {
-  font-family: "MontserratVariable";
-  color: var(--color-text);
 }
 
 .bio {
