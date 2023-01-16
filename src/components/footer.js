@@ -2,7 +2,7 @@ import * as React from "react"
 
 const Footer = () => (
   <footer className="footer">
-    Copyright © <a href="https://www.jayoon.work" target="_blank" rel="noreferrer">Jayoon Kong</a>
+    Copyright © Jayoon Kong
     {` ${new Date().getFullYear()}`},
     all right reserved.
   </footer>
