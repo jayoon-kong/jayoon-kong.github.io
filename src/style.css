@@ -232,6 +232,11 @@ a:focus {
 }
 
 /* Custom classes */
+.global-wrapper {
+  position: relative;
+  min-height: 100vh;
+}
+
 .global-header {
   position: fixed;
   top: 0;
@@ -493,7 +498,7 @@ main {
   text-align: center;
   padding: var(--spacing-2);
   background-color: #eeeeee;
-  position: fixed;
+  position: absolute;
   width: 100%;
   bottom: 0;
 }
