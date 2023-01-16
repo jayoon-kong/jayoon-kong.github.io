@@ -27,14 +27,14 @@
   --spacing-20: 5rem;
   --spacing-24: 6rem;
   --spacing-32: 8rem;
-  --fontFamily-sans: "NanumSquare", "나눔고딕", "MontserratVariable", system-ui, -apple-system,
+  --fontFamily-nanum: "NanumSquare", "나눔고딕", "MontserratVariable", system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
     sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
     "Noto Color Emoji";
-  --fontFamily-serif: "NanumSquare", "나눔고딕", "Merriweather", "Georgia", Cambria, "Times New Roman",
-    Times, serif;
-  --font-body: var(--fontFamily-serif);
-  --font-heading: var(--fontFamily-sans);
+  --fontFamily-mont: "MontserratVariable";
+  --font-body: var(--fontFamily-nanum);
+  --font-heading: var(--fontFamily-nanum);
+  --font-menu: var(--fontFamily-mont);
   --fontWeight-normal: 400;
   --fontWeight-bold: 700;
   --fontWeight-black: 900;
@@ -273,6 +273,7 @@ a:focus {
 }
 
 .menu a {
+  font-family: var(--font-menu);
   color: #525252;
   margin: var(--spacing-0) var(--spacing-5);
 }
