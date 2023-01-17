@@ -1,4 +1,5 @@
 import jayoon from "./images/jayoon.jpg"
+import yujin from "./images/yujin.png"
 
 export const MEMBERS = {
   jayoon: {
