@@ -96,7 +96,7 @@ h4,
 h5,
 h6 {
   font-family: var(--font-heading);
-  margin-top: var(--spacing-12);
+  margin-top: var(--spacing-6);
   margin-bottom: var(--spacing-6);
   line-height: var(--lineHeight-tight);
   letter-spacing: -0.025em;
@@ -173,7 +173,6 @@ ol {
 ul li,
 ol li {
   padding: var(--spacing-0);
-  margin-bottom: calc(var(--spacing-8) / 2);
 }
 
 li > p {
@@ -238,7 +237,7 @@ a:focus {
 }
 
 .global-header {
-  position: fixed;
+  position: sticky;
   top: 0;
   width: 100%;
   font-size: var(--fontSize-7);
@@ -264,7 +263,6 @@ a:focus {
 
 .logo {
   display: flex;
-  min-width: var(--maxWidth-sm);
 }
 
 .menu {
@@ -275,13 +273,13 @@ a:focus {
 .menu a {
   font-family: var(--font-menu);
   color: #525252;
-  margin: var(--spacing-0) var(--spacing-5);
+  margin: var(--spacing-0) var(--spacing-3);
 }
 
 main {
   margin: var(--spacing-0) auto;
+  padding: var(--spacing-0) var(--spacing-6) var(--spacing-16) var(--spacing-6);
   max-width: var(--maxWidth-wrapper);
-  padding: var(--spacing-24) var(--spacing-5);
 }
 
 .post-list-item {
@@ -324,11 +322,15 @@ main {
 }
 
 .bio-avatar {
-  margin-right: var(--spacing-4);
+  margin-right: var(--spacing-8);
   margin-bottom: var(--spacing-0);
   width: var(--spacing-16);
   height: var(--spacing-16);
   border-radius: 100%;
+}
+
+.blog-post {
+  word-break: break-word;
 }
 
 .blog-post header {
@@ -354,12 +356,25 @@ main {
   margin: var(--spacing-0);
 }
 
+.blog-post-nav ul li {
+  margin-bottom: calc(var(--spacing-8) / 2);
+}
+
+.blog-post li {
+  margin-bottom: calc(var(--spacing-8) / 2);
+}
+
 .blog-post section p {
   margin-bottom: var(--spacing-8);
 }
 
 .profile, .project, .seminar {
-  padding: 2rem 0;
+  padding-top: 2rem;
+}
+
+.profile ul li,
+.project ul li {
+  margin-bottom: calc(var(--spacing-8) / 2);
 }
 
 .profile ul li {
@@ -495,11 +510,15 @@ main {
   ol {
     list-style-position: inside;
   }
+  .global-header {
+    padding: var(--spacing-3);
+  }
   .main-heading {
     display: block;
   }
   main {
-    margin-top: var(--spacing-10);
+    overflow: hidden;
+    padding-bottom: var(--spacing-20);
   }
   .menu {
     margin: 0;
