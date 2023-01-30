@@ -177,38 +177,35 @@ v5에서는 `Router`로 감싼 부분에 `history(createMemoryHistory)`라는 `p
 `MemoryRouter`에 대한 부연 설명을 위해 좀더 검색을 해 보다가 좀더 쉽게 공통화할 수 있는 방법을 찾게 되었습니다.
 
 ```javascript
-import { render } from "@testing-library/react"
 import { Route, MemoryRouter, Routes } from "react-router-dom"
 
 export const renderWithRouterMatch = (
   ui: JSX.Element,
-  { path = "/", route = "/" } = {}
+  route: string | string[],
+  path: string,
+  children?: JSX.Element
 ) => {
-  return {
-    ...render(
-      <MemoryRouter initialEntries={[route]}>
-        <Routes>
-          <Route path={path} element={ui} />
-        </Routes>
-      </MemoryRouter>
-    ),
-  }
+  return (
+    <MemoryRouter initialEntries={typeof route === "string" ? [route] : route}>
+      {children && children}
+      <Routes>
+        <Route path={path} element={ui} />
+      </Routes>
+    </MemoryRouter>
+  )
 }
 ```
 
 이제 테스트 코드에서 다음과 같이 사용할 수 있습니다.
 
 ```javascript
-test("renders component correctly", () => {
-  renderWithRouterMatch(
-    <Detail />,
-    {
-      path: "/detail/:id",
-      route: "/"
-    }
-  );
+it("renders component correctly", () => {
+	const route = '/detail/0';
+  const path = '/detail/:id';
+
+	renderWithRouterMatch(<Detail />, route, path);
   ...
 });
 ```
 
-(출처 : [https://woong-jae.com/react/220717-useParams-testing](https://woong-jae.com/react/220717-useParams-testing))
+(참고 : [https://woong-jae.com/react/220717-useParams-testing](https://woong-jae.com/react/220717-useParams-testing))
