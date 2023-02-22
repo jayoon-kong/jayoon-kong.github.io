@@ -27,10 +27,10 @@
   --spacing-20: 5rem;
   --spacing-24: 6rem;
   --spacing-32: 8rem;
-  --fontFamily-nanum: "NanumSquare", "나눔고딕", "MontserratVariable", system-ui, -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
-    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-    "Noto Color Emoji";
+  --fontFamily-nanum: "NanumSquare", "나눔고딕", "MontserratVariable", system-ui,
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", "Noto Color Emoji";
   --fontFamily-mont: "MontserratVariable";
   --font-body: var(--fontFamily-nanum);
   --font-heading: var(--fontFamily-nanum);
@@ -368,7 +368,9 @@ main {
   margin-bottom: var(--spacing-8);
 }
 
-.profile, .project, .seminar {
+.profile,
+.project,
+.seminar {
   padding-top: 2rem;
 }
 
@@ -436,7 +438,7 @@ main {
 }
 
 .project .icon.up {
-  background-image: url("../src/images/btn_up.png")
+  background-image: url("../src/images/btn_up.png");
 }
 
 .project .icon.down {
