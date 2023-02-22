@@ -5,8 +5,7 @@ export const MEMBERS = {
     name: "공자윤",
     team: "SK플래닛",
     description: "글쓰기를 좋아하는 프론트엔드 개발자입니다.",
-    thumbnail: jayoon,
-    link: "http://jayoon.work",
+    thumbnail: jayoon
   },
   cony: {
     name: "Cony",
