@@ -3,7 +3,7 @@ title: "iOS15에서 비디오 재생 직전 화면이 깜박이는 현상"
 date: "2022-11-02"
 tags: ["iOS", "Safari", "web", "rendering"]
 author: "jayoon"
-description: "iOS15 렌더링, iOS15 rendering"
+description: "iOS15 비디오 렌더링 이슈, iOS15 버전에서 비디오 깜박임 현상 해결 및 iOS15, iOS16 object-fit 이슈 수정"
 ---
 
 대부분의 동영상 어플리케이션에서 구현되어 있는 것처럼, V 컬러링에서도 동영상 렌더링 시 재생 전 회색 (또는 하얀) 화면의 노출을 방지하고자 배경에 미리 썸네일을 깔아 두는 구현 방식을 사용하고 있습니다.

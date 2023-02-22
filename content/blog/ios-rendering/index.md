@@ -3,7 +3,7 @@ title: "iOS 비디오 렌더링 최적화"
 date: "2022-08-09"
 tags: ["iOS", "Safari", "web"]
 author: "jayoon"
-description: "iOS 비디오 렌더링, iOS video rendering 트러블 슈팅"
+description: "iOS15 버전에서 발생한 비디오 렌더링 이슈 해결 방법입니다. (iOS15 video rendering trouble shooting)"
 ---
 
 V 컬러링은 플레이어에서 안드로이드와 iOS의 비디오 렌더링 방식이 다르게 구현되어 있습니다. 초기 구현 시에는 OS 구분 없이 공통적으로 처리를 했는데, 먼저 재생될 영상의 앞뒤로 영상 정보를 가져오고 스와이프 내부에서 비디오를 렌더링하면서 위아래로 스와이핑을 할 때 이미 가져온 이전 영상과 다음 영상을 미리 준비함으로써 사용자에게 보다 빠르게 비디오를 보여주도록 되어 있습니다.
@@ -20,17 +20,23 @@ V 컬러링은 플레이어에서 안드로이드와 iOS의 비디오 렌더링 
 위에서 언급한 깜박임을 해결하기 위해 최종적으로 사용된 코드는 다음과 같습니다.
 
 ```javascript
-const objectFit: 'contain' | 'cover' = useMemo(() => 
-	(direction === 'HORIZONTAL' ? 'contain' : 'cover'), 
-[direction]);
+const objectFit: "contain" | "cover" = useMemo(
+  () => (direction === "HORIZONTAL" ? "contain" : "cover"),
+  [direction]
+)
 
-const loadedStyle = useMemo(() => (loaded ? { objectFit } : 
-	{ display: 'none' }), 
-[loaded]);
+const loadedStyle = useMemo(
+  () => (loaded ? { objectFit } : { display: "none" }),
+  [loaded]
+)
 
-{!loaded && <img src='...' alt='thumbnail' />}
-<video className='contain' style={loadedStyle} 
-	onLoadedData={() => setLoaded(true)}
+{
+  !loaded && <img src="..." alt="thumbnail" />
+}
+;<video
+  className="contain"
+  style={loadedStyle}
+  onLoadedData={() => setLoaded(true)}
 />
 ```
 
@@ -38,7 +44,7 @@ const loadedStyle = useMemo(() => (loaded ? { objectFit } :
 
 ```javascript
 sliderMove: () => {
-  setMoving(true);
+  setMoving(true)
 }
 ```
 
@@ -49,7 +55,7 @@ sliderMove: () => {
 아래와 같이 swiper 내부에 이미지 코드를 넣고, video 앞의 이미지 코드는 제거하였습니다.
 
 ```html
-{!loadedForIOS && <img src={firstFrame} alt="thumbnail" ... />}
+{!loadedForIOS && <img src="{firstFrame}" alt="thumbnail" ... />}
 ```
 
 이렇게 했더니 슬라이드 전환이 끝나기 전까지는 기존 영상의 썸네일이 그대로 남아있는 것을 확인할 수 있었습니다. 우선 빈(까만) 화면이 보이는 것보다는 훨씬 안정적인 느낌이 들더군요.
@@ -58,15 +64,21 @@ sliderMove: () => {
 
 ```javascript
 //image
-{(!loadedForIOS || moving) && (
-	<img src={firstFrame} alt="thumbnail" 
-		className={`fe-first-frame ${directionClass}`} />
-)}
+{
+  ;(!loadedForIOS || moving) && (
+    <img
+      src={firstFrame}
+      alt="thumbnail"
+      className={`fe-first-frame ${directionClass}`}
+    />
+  )
+}
 
 //video
-const loadedStyle = useMemo(() => 
-	(loaded && !moving ? { objectFit } : { display: 'none' }), 
-[loaded, moving]);
+const loadedStyle = useMemo(
+  () => (loaded && !moving ? { objectFit } : { display: "none" }),
+  [loaded, moving]
+)
 ```
 
 두근거리는 마음으로 테스트를 했는데 정말 거짓말처럼 스와이핑 시 직전/직후의 썸네일이 나타났습니다! 심지어 화면이 깜박이던 이슈도 여전히 해결된 상태였고, 재생 모드로 스와이핑을 해도 전혀 문제 없이 아주 부드럽게 잘 동작하는 모습이었습니다.

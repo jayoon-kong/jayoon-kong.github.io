@@ -4,7 +4,7 @@ date: "2023-01-28"
 tags:
   ["react router v6", "useHistory", "useNavigation", "react testing library"]
 author: "jayoon"
-description: "react router v6에서 변경된 점 (test 포함)"
+description: "react router v6에서 변경된 점 (test 포함). react router v6에서 react testing libarary 사용하기"
 ---
 
 현재 수행 중인 프로젝트(React)에 테스트 코드를 도입하기 위해서 공부하고 있습니다. react-testing-library라는, 이름에서도 유추할 수 있듯이 react에 최적화된 테스트용 라이브러리를 이용하여 스터디를 하고 있는데요, 자세한 내용은 추후 포스팅하도록 하겠습니다.

@@ -3,7 +3,7 @@ title: "Gatsby로 기술 블로그 만들기"
 date: "2023-01-13"
 tags: ["Gatsby", "blog", "github"]
 author: "jayoon"
-description: "gatsby로 블로그(blog)를 만드는 방법 소개"
+description: "gatsby로 블로그(blog)를 만드는 방법 소개합니다. react 기반의 정적 사이트 생성기 gatsby로 기술블로그를 쉽게 만들 수 있습니다."
 ---
 
 회사에서 기술 블로그를 만든다는 소식을 듣고 데모 사이트를 한 번 만들어 보기로 하였습니다.
@@ -40,7 +40,7 @@ gatsby new jayoon-blog https://github.com/gatsbyjs/gatsby-starter-blog
 
 ![gatsby_2](./gatsby_2.png)
 
-아주 심플하게 타이틀과 저자 소개, 그리고 3건의 포스팅으로 구성이 되어 있었습니다. 처음에 마크다운이라는 것을 모르고 글 등록을 어떻게 해야 하나 한참을 찾아보았는데요, 마크다운 파일을 생성해서 그냥 정해진 경로에 업로드만 하면 저렇게 사이트에 배포가 되는 구조였습니다. 
+아주 심플하게 타이틀과 저자 소개, 그리고 3건의 포스팅으로 구성이 되어 있었습니다. 처음에 마크다운이라는 것을 모르고 글 등록을 어떻게 해야 하나 한참을 찾아보았는데요, 마크다운 파일을 생성해서 그냥 정해진 경로에 업로드만 하면 저렇게 사이트에 배포가 되는 구조였습니다.
 
 시험삼아 기존 노션에 있던 포스팅 중 몇 개를 가져와 마크다운(.md) 파일로 생성해 보았습니다. 헤드라인 및 이미지, 코드 블록 등의 스타일도 잘 되어 있고 가이드도 친절해서 어렵지 않게 작성할 수 있었고, 노션에서 쓸 수 있는 기능은 거의 제공되었기 때문에 가독성 있고 깔끔하게 작성이 가능하였습니다.
 
@@ -54,7 +54,7 @@ gatsby new jayoon-blog https://github.com/gatsbyjs/gatsby-starter-blog
 
 로컬 저장소를 github에 연결하고 commit 및 push를 하였습니다. 기존에 포트폴리오용으로 사용하던 AWS Amplify는 사실 여기까지만 하면 바로 배포가 실행되었는데, github은 그렇게 하기 위해서는 몇 가지 작업을 더 해줘야 합니다. (Github Action을 사용해서 yml 파일을 생성하면 자동배포가 가능합니다.)
 
-우선 저는 수동 배포를 하기 위해 gh-pages라는 라이브러리를 설치하고,  `package.json`에 deploy 명령을 추가해 주었습니다.
+우선 저는 수동 배포를 하기 위해 gh-pages라는 라이브러리를 설치하고, `package.json`에 deploy 명령을 추가해 주었습니다.
 
 ```powershell
 npm i gh-pages --save-dev
