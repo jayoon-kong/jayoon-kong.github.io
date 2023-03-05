@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Gatsby Starter Blog RSS Feed]]></title><description><![CDATA[공자윤의 기술블로그]]></description><link>https://jayoon-kong.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 05 Mar 2023 12:23:55 GMT</lastBuildDate><item><title><![CDATA[V 컬러링에 Next.js 도입하기 (1)]]></title><description><![CDATA[V 컬러링은 2020년에 처음 만들어진 SPA(Single Application Application) 형태의 모바일 웹입니다.
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Gatsby Starter Blog RSS Feed]]></title><description><![CDATA[공자윤의 기술블로그]]></description><link>https://jayoon-kong.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 05 Mar 2023 12:26:45 GMT</lastBuildDate><item><title><![CDATA[V 컬러링에 Next.js 도입하기 (1)]]></title><description><![CDATA[V 컬러링은 2020년에 처음 만들어진 SPA(Single Application Application) 형태의 모바일 웹입니다.
 여러 번의 성능 최적화 작업을 통해 Client side rendering…]]></description><link>https://jayoon-kong.github.io/nextjs-1/</link><guid isPermaLink="false">https://jayoon-kong.github.io/nextjs-1/</guid><dc:creator><![CDATA[jayoon]]></dc:creator><pubDate>Sun, 05 Mar 2023 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;V 컬러링은 2020년에 처음 만들어진 SPA(Single Application Application) 형태의 모바일 웹입니다.
 여러 번의 성능 최적화 작업을 통해 Client side rendering 방식을 사용하고 있음에도 불구하고 속도 측면에서 현재 Native 수준의 성능을 자랑하고 있지만, 3년 동안 수많은 운영 과제를 통해 코드 부채가 조금씩 쌓이면서 불필요한 코드도 많아지고 뭔가 좀더 잘 만들어 볼 수는 없을까? 하는 생각이 계속 과제처럼 따라다니고 있었습니다.&lt;/p&gt;
 &lt;h2&gt;동기&lt;/h2&gt;
@@ -106,8 +106,8 @@ pages 폴더 내부의 &lt;code class=&quot;language-text&quot;&gt;index.tsx&lt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 
 &lt;span class=&quot;token keyword&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;default&lt;/span&gt; App&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;ChatGPT가 작성해준 코드와 별반 다를 것이 없죠? &lt;code class=&quot;language-text&quot;&gt;Next.js&lt;/code&gt;는 Hot reload 기능도 지원해 주기 때문에 결과가 바로 나타났습니다.&lt;/p&gt;
-&lt;p&gt;그리고 기존 컴포넌트들이 들어 있는 &lt;code class=&quot;language-text&quot;&gt;src&lt;/code&gt; 폴더와, font, css, images 등이 들어 있는 &lt;code class=&quot;language-text&quot;&gt;static&lt;/code&gt; 폴더는 그대로 복사해 왔습니다.&lt;/p&gt;
+&lt;p&gt;ChatGPT가 작성해준 코드와 별반 다를 것이 없죠? &lt;code class=&quot;language-text&quot;&gt;Next.js&lt;/code&gt;는 Hot reload 기능도 지원해 주기 때문에 결과가 바로 나타났습니다.
+그리고 기존 컴포넌트들이 들어 있는 &lt;code class=&quot;language-text&quot;&gt;src&lt;/code&gt; 폴더와, font, css, images 등이 들어 있는 &lt;code class=&quot;language-text&quot;&gt;static&lt;/code&gt; 폴더는 그대로 복사해 왔습니다.&lt;/p&gt;
 &lt;p&gt;시험삼아 V 컬러링의 홈 부분 중 일부를 가져와 보았습니다. 헤더 부분과 하단 Navigation이 적용된 모습입니다.&lt;/p&gt;
 &lt;p&gt;&lt;span
       class=&quot;gatsby-resp-image-wrapper&quot;
@@ -142,8 +142,8 @@ pages 폴더 내부의 &lt;code class=&quot;language-text&quot;&gt;index.tsx&lt;
     &lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;아직 아무것도 없긴 하지만 어쨌든 성공적으로 렌더링된 모습을 볼 수 있습니다.&lt;/p&gt;
 &lt;h2&gt;REST API를 활용하여 SSR 페이지 생성하기&lt;/h2&gt;
-&lt;p&gt;이번에는 상단 메인 배너를 SSR을 사용하여 가져와 보도록 하겠습니다.&lt;/p&gt;
-&lt;p&gt;역시나 ChatGPT에게 활용 방법을 물어보았습니다.&lt;/p&gt;
+&lt;p&gt;이번에는 상단 메인 배너를 SSR을 사용하여 가져와 보도록 하겠습니다.
+역시나 ChatGPT에게 활용 방법을 물어보았습니다.&lt;/p&gt;
 &lt;p&gt;&lt;span
       class=&quot;gatsby-resp-image-wrapper&quot;
       style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
