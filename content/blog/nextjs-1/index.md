@@ -86,7 +86,6 @@ export default App
 ```
 
 ChatGPT가 작성해준 코드와 별반 다를 것이 없죠? `Next.js`는 Hot reload 기능도 지원해 주기 때문에 결과가 바로 나타났습니다.
-
 그리고 기존 컴포넌트들이 들어 있는 `src` 폴더와, font, css, images 등이 들어 있는 `static` 폴더는 그대로 복사해 왔습니다.
 
 시험삼아 V 컬러링의 홈 부분 중 일부를 가져와 보았습니다. 헤더 부분과 하단 Navigation이 적용된 모습입니다.
@@ -98,7 +97,6 @@ ChatGPT가 작성해준 코드와 별반 다를 것이 없죠? `Next.js`는 Hot 
 ## REST API를 활용하여 SSR 페이지 생성하기
 
 이번에는 상단 메인 배너를 SSR을 사용하여 가져와 보도록 하겠습니다.
-
 역시나 ChatGPT에게 활용 방법을 물어보았습니다.
 
 ![chatgpt_2](./chatgpt_2.png)
