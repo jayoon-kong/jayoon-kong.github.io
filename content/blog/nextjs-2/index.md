@@ -168,11 +168,13 @@ const PlayerComponent = ({ list, id, type }: IProps) => {
     () => fetchContent(list[current]),
     { staleTime: 10 * 1000 * 1000 }
   )
+
   const { data: prevData } = useQuery(
     `content${list[current - 1]}`,
     () => fetchContent(list[current - 1]),
     { staleTime: 10 * 1000 * 1000, enabled: !!list[current - 1] }
   )
+
   const { data: nextData } = useQuery(
     `content${list[current + 1]}`,
     () => fetchContent(list[current + 1]),
