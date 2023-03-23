@@ -381,6 +381,13 @@ main ol {
   padding-top: 2rem;
 }
 
+.profile ul,
+.project ul {
+  list-style: none;
+  margin: var(--spacing-0);
+  padding: var(--spacing-0);
+}
+
 .profile ul li,
 .project ul li {
   margin-bottom: calc(var(--spacing-8) / 2);
@@ -438,7 +445,7 @@ main ol {
 }
 
 .project .icon {
-  background-position: right 0.5rem;
+  background-position: right 0.5rem top 0;
   background-repeat: no-repeat;
   background-size: 20px 20px;
   cursor: pointer;
