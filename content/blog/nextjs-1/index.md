@@ -120,9 +120,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async () => {
         status: "DURING",
       }),
     })
-    const data = await response.json()
+    const { data } = await response.json()
 
-    return { props: { { data }: data } }
+    return { props: { data } }
   } catch (error) {
     return { props: { data: null } }
   }
