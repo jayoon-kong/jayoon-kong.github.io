@@ -163,16 +163,8 @@ p {
 
 ul,
 ol {
-  margin: var(--spacing-0);
-  padding: var(--spacing-0);
   list-style-position: outside;
   list-style-image: none;
-  list-style: none;
-}
-
-ul li,
-ol li {
-  padding: var(--spacing-0);
 }
 
 li > p {
@@ -282,6 +274,11 @@ main {
   max-width: var(--maxWidth-wrapper);
 }
 
+main ol {
+  margin: var(--spacing-0);
+  padding: var(--spacing-0);
+}
+
 .post-list-item {
   margin-bottom: var(--spacing-8);
   margin-top: var(--spacing-8);
@@ -360,8 +357,18 @@ main {
   margin-bottom: calc(var(--spacing-8) / 2);
 }
 
+.blog-post ul,
+.blog-post ol {
+  padding-left: var(--spacing-8);
+  margin: var(--spacing-8) var(--spacing-0);
+}
+
+.blog-post ol li {
+  margin-left: var(--spacing-2);
+}
+
 .blog-post li {
-  margin-bottom: calc(var(--spacing-8) / 2);
+  margin-bottom: var(--spacing-4);
 }
 
 .blog-post section p {
@@ -504,9 +511,16 @@ main {
 /* Media queries */
 
 @media (max-width: 42rem) {
+  body {
+    font-size: var(--fontSize-0);
+  }
+  h2 {
+    font-size: var(--fontSize-2);
+  }
   blockquote {
     padding: var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--spacing-4);
     margin-left: var(--spacing-0);
+    font-size: var(--fontSize-1);
   }
   ul,
   ol {
@@ -521,6 +535,10 @@ main {
   main {
     overflow: hidden;
     padding-bottom: var(--spacing-20);
+  }
+  .blog-post ul,
+  .blog-post ol {
+    padding-left: var(--spacing-4);
   }
   .menu {
     margin: 0;

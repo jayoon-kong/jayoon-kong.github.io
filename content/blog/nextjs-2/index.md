@@ -6,7 +6,7 @@ author: "jayoon"
 description: "React로 구현된 SPA (CSR) 프로젝트를 Next.js로 Migration하는 과정"
 ---
 
-본 포스팅에서는 하단 네비게이션 탭 클릭 시 플레이어 화면으로 이동하는 라우터 처리 부분과, 실제 플레이어 화면의 구조를 어떻게 개선하였는지를 중점적으로 다룰 예정입니다.
+본 포스팅에서는 비디오 상세 화면 라우터 처리 부분과, 실제 비디오 화면의 구조를 어떻게 개선하였는지를 중점적으로 다룰 예정입니다.
 
 포스팅 내용을 미리 요약하면 다음과 같습니다.
 
@@ -21,15 +21,16 @@ next.js를 도입하기로 결정한 뒤 가장 큰 숙제는 **기존 프로젝
 
 기존 프로젝트는 전체가 SPA(Single Page Application)로 구현되어 있어 모든 페이지가 CSR 방식으로 처리되고 있었습니다. 사용자와의 interaction이 많은 프로젝트의 성격상 CSR의 장점이 훨씬 많고, 특히 플레이어 같은 경우 스와이핑이 빈번하게 일어나기 때문에 여전히 플레이어 영역은 CSR로 구현되어야 한다는 생각에는 변함이 없었으나, 초기 진입 시 비디오를 로드하는 부분은 서버에서 가져오는 방식이 더 빠를 수도 있겠다는 생각이 들어 아키텍쳐를 어떻게 설계하는 것이 좋은지에 대해 아주 오랜 시간 동안 고민하였습니다.
 
-고민 끝에 **플레이어 영역은 SSR과 CSR 방식을 혼합**하여 사용하기로 결정했습니다. 최초 진입 시에는 서버로부터 컨텐츠 리스트를 받아오는 부분을 포함하여 가장 처음과 그 다음에 표시될 두 컨텐츠의 상세 정보까지 서버 사이드에서 처리하여 렌더링하고, 이후 사용자의 액션에 따라 slide change event가 발생하는 순간부터는 클라이언트 사이드에서 API를 호출하여 렌더링하는 방식을 사용하기로 하였습니다.
+고민 끝에 비디오 플레이어 영역은 SSR과 CSR 방식을 혼합하여 사용하기로 결정했습니다. 최초 진입 시에는 서버로부터 컨텐츠 리스트를 받아오는 부분을 포함하여 가장 처음과 그 다음에 표시될 두 컨텐츠의 상세 정보까지 서버 사이드에서 처리하여 렌더링하고, 이후 사용자의 액션에 따라 slide change event가 발생하는 순간부터는 클라이언트 사이드에서 API를 호출하여 렌더링하는 방식을 사용하기로 하였습니다.
 
 또한 기존에는 redux를 사용하고 있어 데이터가 무겁고 리스트를 구성하는 방식을 reducer에서 일일이 찾아서 처리해야 하는 번거로움이 있었기 때문에, 데이터 fetching 처리를 **react query를 사용**하도록 변경하였습니다. 서버 사이드 렌더링 시에도 react query를 사용할 수 있을지, 거기서 처리한 데이터를 클라이언트에서도 그대로 사용할 수 있을지에 대한 고민이 많았으나 다행히 react query에서 해당 기능을 지원하고 있어서 무리 없이 사용할 수 있었습니다.
 
 ## rendering 처리
 
-### routing
+먼저 video 컴포넌트를 생성하였습니다. next.js는 파일 시스템 기반의 라우팅 방식을 적용하고 있기 때문에, pages 폴더 안에 ${이름}.tsx 파일을 생성하면 해당 이름으로 웹 페이지에서 접근할 수 있습니다.
+현재 video 영역의 URL은 `video/{id}` 형태로 되어 있는데, 이렇게 하려면 video 폴더 하위에 컴포넌트 이름을 [id].tsx라고 지어주기만 하면 됩니다.
 
-먼저 player 컴포넌트를 생성하였습니다. next.js는 파일 시스템 기반의 라우팅 방식을 적용하고 있기 때문에, pages 폴더 안에 ${이름}.tsx 파일을 생성하면 해당 이름으로 웹 페이지에서 접근할 수 있습니다. 기존과 같이 `${V컬러링}/player`으로 진입하기 위해 player.tsx 파일을 pages 하위에 생성하였습니다.
+pages 하위에 video 폴더와 [id].tsx 파일을 생성하였습니다.
 
 ### getServerSideProps
 
@@ -39,103 +40,133 @@ next.js를 도입하기로 결정한 뒤 가장 큰 숙제는 **기존 프로젝
 
 즉 Next.js에서 서버 사이드 렌더링을 사용하기 위해서 `getServerSideProps`를 호출하면, 해당 함수의 데이터를 통해 페이지를 미리 렌더링할 수 있습니다.
 
-우선 컨텐츠 리스트를 받아 오는 부분을 구현해 보았습니다.
+현재 비디오 플레이어 화면에서 필요한 (컨텐츠 관련) API는 다음과 같습니다.
 
-```javascript
-// fetch data
-const fetchContentsIds = async () => {
-  const response = await fetch(`${baseURL}/v1/...`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-  const { data } = await response.json()
-  return { data }
-}
+- URL의 id에 해당하는 컨텐츠 상세 정보 조회
+- 해당 컨텐츠에 매핑된 카테고리 이름 조회
+- 카테고리 이름으로 연관된 컨텐츠 id list 조회
+- 위로 스와이핑했을 경우 로드되는 이전 컨텐츠 상세 정보 조회
+- 아래로 스와이핑했을 경우 로드되는 이후 컨텐츠 상세 정보 조회
 
-// component
-interface IProps {
-  list: number[];
-  id: number;
-}
-
-const Player = ({ list, id }: IProps) => {
-  return <PlayerComponent list={list || []} type="home" id={id} />
-}
-
-// getServerSideProps
-export const getServerSideProps: GetServerSideProps = async () => {
-  const { data } = await fetchContentsIds()
-  const list = data?.contentsList.map(
-    (item: { contentsId: number }) => item.contentsId
-  )
-
-  const id = list[0]
-
-  return {
-    props: {
-      list,
-      id,
-    },
-  }
-}
-```
-
-이렇게 하면 서버에서 HTML을 내리기 전 미리 `fetchContentsIds`에서 데이터를 fetching하여 클라이언트로 전달할 수 있습니다.
+이 중에서 꼭 필요한 것은 **현재 컨텐츠의 상세 정보를 조회**하는 API이기 때문에, 우선 부하를 줄이기 위해 서버사이드에서는 해당 API만 호출하고 나머지는 CSR로 처리하기로 결정하였습니다.
 
 ## react query
 
-저는 컨텐츠 아이디 리스트 뿐 아니라, 최초 진입 시 보여줄 비디오 정보를 미리 로드하기 위하여 추가적으로 API를 호출하였습니다. 기존의 redux 대신 react query를 이용하여 데이터를 가져왔습니다.
-
 ```javascript
-const fetchContent = async (id: number) => {
-  const response = await fetch(`${baseURL}/${id}`)
-  const { data } = await response.json()
-  return { data }
-}
+// fetch data
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const queryClient = new QueryClient();
+  const id = Number(context.params?.id as string);
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const queryClient = new QueryClient()
+  await queryClient.prefetchQuery([QueryKey.GET_CONTENT, id],
+		() => ContentsApi.getContents(id).then(res => res.data),
+		{
+	    staleTime: 10 * 6000 * 6000,
+	    cacheTime: Infinity
+	  }
+	);
 
-  const { data } = await queryClient.fetchQuery(
-    `contentsIds`,
-    fetchContentsIds,
-    { staleTime: 10 * 1000 * 1000 }
-  )
-  const list = data?.contentsList.map(
-    (item: { contentsId: number }) => item.contentsId
-  )
-
-  const contentsId = list[0]
-  const nextId = list[1]
-
-  await Promise.all([
-    queryClient.fetchQuery(`content${contentsId}`, () =>
-      fetchContent(contentsId)
-    ),
-    { staleTime: 10 * 1000 * 1000 },
-    queryClient.fetchQuery(`content${nextId}`, () => fetchContent(nextId)),
-    { staleTime: 10 * 1000 * 1000 },
-  ])
-
-  const dehydratedState: DehydratedState = dehydrate(queryClient)
+  const dehydratedState = dehydrate(queryClient);
 
   return {
     props: {
-      dehydratedState,
-      list,
-      id: contentsId,
+      dehydratedState
     },
+  };
+};
+```
+
+`QueryClient`를 선언하고, param으로 넘어온 id로 컨텐츠 상세 정보를 조회합니다. 이렇게 하면 서버에서 HTML을 내리기 전 미리 prefetch된 데이터를 fetching하여 클라이언트로 전달할 수 있습니다.
+
+```javascript
+// useContent hook
+const useContent = (id: number, enabled?: boolean) => {
+  return useQuery(
+    [QueryKey.GET_CONTENT, id],
+    async () => {
+      const res = await ContentsApi.getContents(id)
+
+      if (res.code === StatusCodes.SUCCESS) {
+        return res.data
+      }
+      return null
+    },
+    {
+      staleTime: 60 * 60 * 1000,
+      cacheTime: Infinity,
+      enabled,
+    }
+  )
+}
+
+export default useContent
+```
+
+```javascript
+const Video = () => {
+  const router = useRouter()
+  const id = Number(router.query.id)
+
+  const { data: contents } = useContent(id)
+
+  const categoryNames = useMemo(
+    () => contents?.categories?.map(item => item.name) || [],
+    [contents]
+  )
+
+  const { data: list } = useQuery(
+    [`getContentsByCategories`, categoryNames],
+    () => ContentsApi.getContentsByCategories(categoryNames),
+    {
+      staleTime: 10 * 6000 * 6000,
+      cacheTime: Infinity,
+      enabled: !!contents,
+    }
+  )
+
+  const idList = useMemo(
+    () => list?.data.contentsList.map(item => item.contentsId),
+    [list]
+  )
+
+  const handleContentChange = useCallback(
+    (id: number) => {
+      router.replace(`/video/${id}`, undefined, { shallow: true })
+    },
+    [router]
+  )
+
+  if (!idList?.length) {
+    return <CenterLoading />
   }
+
+  if (idList?.indexOf(id) === -1) {
+    idList.splice(0, 0, id)
+  }
+
+  return (
+    <PlayerComponent
+      list={idList || []}
+      type="home"
+      id={id}
+      onContentChange={handleContentChange}
+    />
+  )
 }
 ```
 
-처음 list에서 받아온 ID값으로 **react query**의 키를 설정하였습니다. **react query**를 사용할 때는 항상 `useQuery` 또는 `fetchQuery`의 첫 번째 인자 값이 키가 되는데, 이 키를 바탕으로 현재 프로젝트가 해당 데이터를 최신으로 유지하고 있는지 여부를 판단합니다. 즉, contentsIds 키로 한 번 조회한 데이터(list)는 이후에 API를 다시 호출하더라도 데이터 상태가 stale하게 변경되지 않는 이상 fetching이 다시 일어나지 않습니다.
+위에서 언급한 API를 순서대로 호출한 로직입니다.
 
-데이터 상태의 신선도를 판단하거나 다시 호출하기 위해서는 `staleTime`, `cacheTime` 등의 옵션을 사용하면 되는데, 위 예제에서는 우선 `staleTime`을 설정하였습니다. 그렇게 되면 해당 시간 동안은 데이터가 fresh한 상태라고 판단하여 API 호출이 일어나더라도 실제로 fetching이 일어나지 않고 캐시된 데이터를 사용하게 됩니다. 이를 통해 불필요한 API 호출을 줄여 성능을 최적화할 수 있습니다.
+먼저 useContent(id) hook을 이용하여, `getServerSideProps` 에서 받아온 데이터를 조회하였습니다.
 
-이렇게 fetching된 데이터는 `queryClient`에 담기게 됩니다. 여기까지는 CSR 방식에서 **react query**를 사용하는 방식과 동일합니다. 하지만 이번에는 서버에서 최초 데이터를 fetching하였기 때문에 이 부분을 클라이언트로 전송하는 방식에 대해 조사해 보았습니다.
+**react query**를 사용할 때는 항상 `useQuery` 또는 `fetchQuery`의 첫 번째 인자 값이 키가 되는데, 이 키를 바탕으로 현재 프로젝트가 해당 데이터를 최신으로 유지하고 있는지 여부를 판단합니다.
+즉, [QueryKey.GET_CONTENT, id] 키로 한 번 조회한 데이터는 이후에 API를 다시 호출하더라도 데이터 상태가 stale하게 변경되지 않는 이상 fetching이 다시 일어나지 않습니다.
+
+데이터 상태의 신선도를 판단하거나 다시 호출하기 위해서는 `staleTime`, `cacheTime` 등의 옵션을 사용하면 되는데, 위 예제에서는 우선 `staleTime`을 설정하였습니다.
+그렇게 되면 해당 시간 동안은 데이터가 fresh한 상태라고 판단하여 API 호출이 일어나더라도 실제로 fetching이 일어나지 않고 캐시된 데이터를 사용하게 됩니다. 이를 통해 불필요한 API 호출을 줄여 성능을 최적화할 수 있습니다.
+
+이렇게 fetching된 데이터는 `queryClient`에 담기게 됩니다. 여기까지는 CSR 방식에서 **react query**를 사용하는 방식과 동일합니다.
+하지만 이번에는 서버에서 최초 데이터를 fetching하였기 때문에 이 부분을 클라이언트로 전송하는 방식에 대해 조사해 보았습니다.
 
 ### hydrate
 
@@ -162,30 +193,21 @@ const dehydratedState: DehydratedState = dehydrate(queryClient)
 쉽게 말하면 서버 사이드에서 말린 데이터를 클라이언트 사이드에서 받아, 사용하고자 하는 각 컴포넌트에서 다시 적셔서 사용한다고 볼 수 있습니다. 특별히 데이터를 전송하지 않았는데 어떻게 그 값을 판단하지? 라는 생각이 들 수 있는데, 앞에서 언급했듯이 react query에서 제공하는 키 값으로 데이터를 받아 사용할 수 있습니다.
 
 ```javascript
-const PlayerComponent = ({ list, id, type }: IProps) => {
-  const { data: currentData } = useQuery(
-    `content${list[current]}`,
-    () => fetchContent(list[current]),
-    { staleTime: 10 * 1000 * 1000 }
-  )
-
-  const { data: prevData } = useQuery(
-    `content${list[current - 1]}`,
-    () => fetchContent(list[current - 1]),
-    { staleTime: 10 * 1000 * 1000, enabled: !!list[current - 1] }
-  )
-
-  const { data: nextData } = useQuery(
-    `content${list[current + 1]}`,
-    () => fetchContent(list[current + 1]),
-    { staleTime: 10 * 1000 * 1000, enabled: !!list[current + 1] }
-  )
-}
+const { data: contents } = useContent(id)
 ```
 
-실제 컴포넌트에서는 위와 같이 사용할 수 있습니다. 이렇게 하면 키 값의 구분자가 되는 list[current] 값에 따라 기존에 호출되지 않았던 API에 대해서만 데이터 fetching이 일어나기 때문에, 컴포넌트에서 세 번의 API를 호출하였지만 실제로는 서버에서 이미 받아온 두 컨텐츠의 데이터는 가져오지 않게 됩니다. 그리고 prevData의 경우 현재로서는 list[current - 1] 값이 존재하지 않기 때문에 enabled 속성에 따라 호출이 무시됩니다. 즉 이 예시를 적용하여 네트워크 탭을 확인해 보면 **위 세 API가 클라이언트 사이드에서는 실제로 모두 호출되지 않는다는 사실을 확인할 수 있습니다**.
+실제 컴포넌트에서는 위와 같이 사용할 수 있습니다. 이렇게 하면 키 값의 구분자가 되는 [QueryKey.GET_CONTENT, id] 값에 따라 기존에 호출되지 않았던 API에 대해서만 데이터 fetching이 일어나기 때문에, 컴포넌트에서 API를 호출하였지만 실제로는 서버에서 이미 받아온 컨텐츠의 데이터는 가져오지 않게 됩니다.
+즉 이 예시를 적용하여 네트워크 탭을 확인해 보면 **위 API가 클라이언트 사이드에서는 실제로 호출되지 않는다는 사실을 확인할 수 있습니다**.
 
-그리고 실제로 content가 렌더링되도록 구현해 보았습니다.
+그리고 서버 부하를 줄이고 더 나은 사용자 경험을 위해 나머지 API는 클라이언트에서 호출하도록 처리하였습니다.
+
+아래는 하위 컴포넌트(`PlayerComponent`)에서 처리하는 방식입니다.
+
+```javascript
+const { data: currentData } = useContent(list[current])
+const { data: prevData } = useContent(list[current - 1], !!list[current - 1])
+const { data: nextData } = useContent(list[current + 1], !!list[current + 1])
+```
 
 ```javascript
 <Swiper {...swiperParams} direction="vertical">
@@ -208,7 +230,24 @@ const PlayerComponent = ({ list, id, type }: IProps) => {
 </Swiper>
 ```
 
-하위 컴포넌트로 전송하는 prop인 contents에는 위에서 가져온 prevData, currentData, nextData를 모두 담아, 빠른 렌더링을 위해 스와이프가 일어날 때 미리 직전/직후의 썸네일 및 동영상을 로드할 수 있도록 하였습니다. 그리고 스와이핑 시 current 값이 변경되면서 useQuery로 가져오는 키 값이 바뀌며 데이터 fetching이 일어납니다. 그리고 설정된 staleTime에 따라, 이미 가져온 데이터는 캐싱되어 다시 스와이핑이 되어도 fetching되지 않습니다.
+하위 컴포넌트 진입 시 빠른 렌더링을 위해 스와이프가 일어날 때 미리 직전/직후의 썸네일 및 동영상을 로드할 수 있도록 하였습니다.
+
+### routing
+
+```javascript
+const handleContentChange = useCallback(
+  (id: number) => {
+    router.replace(`/video/${id}`, undefined, { shallow: true })
+  },
+  [router]
+)
+```
+
+swipe change event가 일어날 때에는 상위 컴포넌트에서 받아온 `handleContentChange` 함수가 호출되면서 `video/${nextId}` 또는 `video/${prevId}`로 URL이 변경되고 컴포넌트가 다시 실행됩니다.
+여기서 중요한 부분은, `**router.replace`를 할 때 `{ shallow: true }` 옵션을 주었기 때문에 getServerSideProps가 다시 실행되지 않는다는 점\*\*입니다.
+이미 클라이언트 사이드에서 직전/직후의 동영상 정보를 가져왔기 때문에, 사용자는 문제없이 이전 동영상과 다음 동영상을 감상할 수 있습니다. 이렇게 함으로써 서버 부하를 줄일 수 있습니다.
+
+그리고 `useQuery`로 가져오는 키 값에 따라, 이미 가져온 데이터는 캐싱되어 다시 스와이핑이 되어도 fetching되지 않습니다.
 
 ## Swiper library update
 
