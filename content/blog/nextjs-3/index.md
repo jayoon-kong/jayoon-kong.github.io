@@ -50,7 +50,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
   // 쿠키에서 토큰 정보를 추출한 뒤 header의 Authorization에 추가해 줍니다.
   const token = req.cookies.token
-  if (token !== "undefined") {
+  if (token) {
     axios.defaults.headers["Authorization"] = `Bearer ${token}`
   }
 
@@ -109,12 +109,12 @@ axios의 interceptors에서는 토큰 값을 가져왔다 가져오지 못했다
 ```javascript
 const getToken = () => {
   const auth = axios.defaults.headers.Authorization // 디폴트 헤더 값을 먼저 가져옴
-  if (auth && auth !== "undefined") {
+  if (auth) {
     return auth
   }
 
   const token = Token.getToken() // 없는 경우에 쿠키에서 직접 가져옴
-  if (token && token !== "undefined") {
+  if (token) {
     return `Bearer ${token}`
   }
 
