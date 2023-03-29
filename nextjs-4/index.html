@@ -144,8 +144,7 @@ user.ts에서 initialize가 되기 전에 API 핸들러가 호출된다는 내�
 <p>원인을 분석해 보니 Player 컴포넌트에서 부르고 있는 하위 컴포넌트에서 userInfo 정보를 가져오기 위해 UserAPI를 호출하고 있다는 사실을 확인했습니다.
 그런데 Player의 경우 순수 CSR 컴포넌트이기 때문에 <code class="language-text">getServerSideProps</code>를 사용하지 않고 있었고, <code class="language-text">_app.tsx</code>의 <code class="language-text">getInitialProps</code>에서 리턴하는 props를 받지 못한 상태라 API 핸들러에서 사용하고자 하는 정보들을 가져오는 과정에서 오류가 발생한 것이었습니다.</p>
 <p>문제를 해결하기 위해 Player에서 <code class="language-text">getServerSideProps</code>를 선언하여 props를 가져오도록 하였습니다.
-그리고 결정적으로 모든 페이지에서 userInfo를 가져와야 하기 때문에 <code class="language-text">_app.tsx</code>에서 initialize를 해 주는 과정에 userInfo를 받아 오는 작업을 추가해 주었습니다.
-그리고 <code class="language-text">dehydratedState</code>로 리턴하도록 처리하였습니다.</p>
+그리고 <code class="language-text">_app.tsx</code>에서 initialize를 해 주는 과정에 userInfo를 받아 오는 작업을 추가하려고 하였으나, <code class="language-text">getInitialProps</code>가 <code class="language-text">&lt;Hydrate></code>의 바깥에서 실행되기 때문에 결국 dehydratedState를 각 페이지로 전달하지 못한다는 사실을 발견하고 해당 코드는 my에서만 부르는 것으로 변경하였습니다.</p>
 <div class="gatsby-highlight" data-language="javascript"><pre class="language-javascript"><code class="language-javascript"><span class="token keyword">export</span> <span class="token keyword">const</span> <span class="token function-variable function">initialize</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token literal-property property">ctx</span><span class="token operator">:</span> any</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
   <span class="token keyword">const</span> <span class="token punctuation">{</span>
     <span class="token literal-property property">req</span><span class="token operator">:</span> <span class="token punctuation">{</span> cookies<span class="token punctuation">,</span> headers <span class="token punctuation">}</span><span class="token punctuation">,</span>
@@ -189,24 +188,9 @@ App<span class="token punctuation">.</span><span class="token function-variable 
 <span class="token punctuation">}</span>
 
 <span class="token keyword">export</span> <span class="token keyword">default</span> App</code></pre></div>
-<p>이렇게 하면 각 페이지에서는 데이터를 따로 fetching하지 않아도 userInfo 값을 사용할 수 있게 됩니다.</p>
-<h3>(추가 이슈)</h3>
-<p>위 코드대로 구현하면 <code class="language-text">{ shallow: true }</code> 옵션을 사용하여 이동하거나 뒤로가기를 해도 user 정보를 계속 fetching하게 됩니다.</p>
-<p>따라서 최초 진입 시에만 API를 호출하도록 수정하였습니다.</p>
-<div class="gatsby-highlight" data-language="javascript"><pre class="language-javascript"><code class="language-javascript">App<span class="token punctuation">.</span><span class="token function-variable function">getInitialProps</span> <span class="token operator">=</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> Component<span class="token punctuation">,</span> pageProps<span class="token punctuation">,</span> ctx <span class="token punctuation">}</span><span class="token operator">:</span> any</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-  <span class="token function">initialize</span><span class="token punctuation">(</span>ctx<span class="token punctuation">)</span>
-
-  <span class="token keyword">const</span> isFromNext <span class="token operator">=</span> ctx<span class="token punctuation">.</span>req<span class="token operator">?.</span>url<span class="token punctuation">.</span><span class="token function">startsWith</span><span class="token punctuation">(</span><span class="token string">"/_next"</span><span class="token punctuation">)</span>
-  <span class="token keyword">return</span> <span class="token punctuation">{</span>
-    <span class="token literal-property property">props</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-      <span class="token operator">...</span><span class="token punctuation">(</span>isFromNext
-        <span class="token operator">?</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
-        <span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token literal-property property">dehydratedState</span><span class="token operator">:</span> <span class="token function">dehydrate</span><span class="token punctuation">(</span><span class="token keyword">await</span> <span class="token function">getQueryClientForUserInfo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-      Component<span class="token punctuation">,</span>
-      <span class="token literal-property property">pageProps</span><span class="token operator">:</span> pageProps <span class="token operator">||</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
-    <span class="token punctuation">}</span><span class="token punctuation">,</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre></div>
+<div class="gatsby-highlight" data-language="javascript"><pre class="language-javascript"><code class="language-javascript"><span class="token comment">// my.tsx</span>
+<span class="token keyword">const</span> dehydratedState <span class="token operator">=</span> <span class="token function">dehydrate</span><span class="token punctuation">(</span><span class="token keyword">await</span> <span class="token function">getQueryClientForUserInfo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">return</span> <span class="token punctuation">{</span> <span class="token literal-property property">props</span><span class="token operator">:</span> <span class="token punctuation">{</span> dehydratedState <span class="token punctuation">}</span> <span class="token punctuation">}</span></code></pre></div>
 <h3>이슈2</h3>
 <p>userAgent 값을 분기 처리할 때 <code class="language-text">typeof window !== 'undefined'</code>라는 조건으로 CSR 여부를 판단하면 된다고 ChatGPT가 알려주었으나 실제로는 <code class="language-text">window</code>를 찾을 수 없다는 오류가 계속해서 발생했습니다.
 그래서 <code class="language-text">window</code>의 type으로 표시되는 <code class="language-text">globalThis</code> 조건을 추가하였더니 이슈가 해결되었습니다.</p>
