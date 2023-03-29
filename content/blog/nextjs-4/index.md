@@ -134,7 +134,7 @@ export const getConfig = (): AxiosRequestConfig => {
 
 위와 같이 axios의 instance에서 공통 처리를 하였기 때문에 API 호출부에서는 토큰 및 환경에 대한 어떤 관여도 없이 순수하게 API 호출만을 담당하도록 하였습니다.
 
-최종적으로 \_app.tsx에서 initialize를 해 주었습니다.
+최종적으로 `_app.tsx`에서 initialize를 해 주었습니다.
 
 ```javascript
 App.getInitialProps = async ({ Component, pageProps, ctx }: any) => {
@@ -155,7 +155,7 @@ user.ts에서 initialize가 되기 전에 API 핸들러가 호출된다는 내�
 그런데 Player의 경우 순수 CSR 컴포넌트이기 때문에 `getServerSideProps`를 사용하지 않고 있었고, `_app.tsx`의 `getInitialProps`에서 리턴하는 props를 받지 못한 상태라 API 핸들러에서 사용하고자 하는 정보들을 가져오는 과정에서 오류가 발생한 것이었습니다.
 
 문제를 해결하기 위해 Player에서 getServerSideProps를 선언하여 props를 가져오도록 하였습니다.
-그리고 결정적으로 모든 페이지에서 userInfo를 가져와야 하기 때문에 \_app.tsx에서 initialize를 해 주는 과정에 userInfo를 받아 오는 작업을 추가해 주었습니다.
+그리고 결정적으로 모든 페이지에서 userInfo를 가져와야 하기 때문에 `_app.tsx`에서 initialize를 해 주는 과정에 userInfo를 받아 오는 작업을 추가해 주었습니다.
 그리고 dehydratedState로 리턴하도록 처리하였습니다.
 
 ```javascript
