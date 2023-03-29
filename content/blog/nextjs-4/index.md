@@ -155,8 +155,7 @@ user.ts에서 initialize가 되기 전에 API 핸들러가 호출된다는 내�
 그런데 Player의 경우 순수 CSR 컴포넌트이기 때문에 `getServerSideProps`를 사용하지 않고 있었고, `_app.tsx`의 `getInitialProps`에서 리턴하는 props를 받지 못한 상태라 API 핸들러에서 사용하고자 하는 정보들을 가져오는 과정에서 오류가 발생한 것이었습니다.
 
 문제를 해결하기 위해 Player에서 `getServerSideProps`를 선언하여 props를 가져오도록 하였습니다.
-그리고 결정적으로 모든 페이지에서 userInfo를 가져와야 하기 때문에 `_app.tsx`에서 initialize를 해 주는 과정에 userInfo를 받아 오는 작업을 추가해 주었습니다.
-그리고 `dehydratedState`로 리턴하도록 처리하였습니다.
+그리고 `_app.tsx`에서 initialize를 해 주는 과정에 userInfo를 받아 오는 작업을 추가하려고 하였으나, `getInitialProps`가 `<Hydrate>`의 바깥에서 실행되기 때문에 결국 dehydratedState를 각 페이지로 전달하지 못한다는 사실을 발견하고 해당 코드는 my에서만 부르는 것으로 변경하였습니다.
 
 ```javascript
 export const initialize = (ctx: any) => {
@@ -207,29 +206,10 @@ App.getInitialProps = async ({ Component, pageProps, ctx }: any) => {
 export default App
 ```
 
-이렇게 하면 각 페이지에서는 데이터를 따로 fetching하지 않아도 userInfo 값을 사용할 수 있게 됩니다.
-
-### (추가 이슈)
-
-위 코드대로 구현하면 `{ shallow: true }` 옵션을 사용하여 이동하거나 뒤로가기를 해도 user 정보를 계속 fetching하게 됩니다.
-
-따라서 최초 진입 시에만 API를 호출하도록 수정하였습니다.
-
 ```javascript
-App.getInitialProps = async ({ Component, pageProps, ctx }: any) => {
-  initialize(ctx)
-
-  const isFromNext = ctx.req?.url.startsWith("/_next")
-  return {
-    props: {
-      ...(isFromNext
-        ? {}
-        : { dehydratedState: dehydrate(await getQueryClientForUserInfo()) }),
-      Component,
-      pageProps: pageProps || {},
-    },
-  }
-}
+// my.tsx
+const dehydratedState = dehydrate(await getQueryClientForUserInfo())
+return { props: { dehydratedState } }
 ```
 
 ### 이슈2
