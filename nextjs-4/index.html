@@ -131,7 +131,7 @@ userAgent의 값도 앞에서 언급한 것처럼 req의 headers 정보로부터
   <span class="token punctuation">}</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></div>
 <p>위와 같이 axios의 instance에서 공통 처리를 하였기 때문에 API 호출부에서는 토큰 및 환경에 대한 어떤 관여도 없이 순수하게 API 호출만을 담당하도록 하였습니다.</p>
-<p>최종적으로 _app.tsx에서 initialize를 해 주었습니다.</p>
+<p>최종적으로 <code class="language-text">_app.tsx</code>에서 initialize를 해 주었습니다.</p>
 <div class="gatsby-highlight" data-language="javascript"><pre class="language-javascript"><code class="language-javascript">App<span class="token punctuation">.</span><span class="token function-variable function">getInitialProps</span> <span class="token operator">=</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> Component<span class="token punctuation">,</span> pageProps<span class="token punctuation">,</span> ctx <span class="token punctuation">}</span><span class="token operator">:</span> any</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
 	RequestHandler<span class="token punctuation">.</span><span class="token function">setServerToken</span><span class="token punctuation">(</span>cookies<span class="token operator">?.</span>token<span class="token punctuation">)</span><span class="token punctuation">;</span>
   RequestHandler<span class="token punctuation">.</span><span class="token function">setServerAgent</span><span class="token punctuation">(</span>headers <span class="token operator">?</span> headers<span class="token punctuation">[</span><span class="token string">'user-agent'</span><span class="token punctuation">]</span> <span class="token operator">:</span> <span class="token keyword">undefined</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -144,7 +144,7 @@ user.ts에서 initialize가 되기 전에 API 핸들러가 호출된다는 내�
 <p>원인을 분석해 보니 Player 컴포넌트에서 부르고 있는 하위 컴포넌트에서 userInfo 정보를 가져오기 위해 UserAPI를 호출하고 있다는 사실을 확인했습니다.
 그런데 Player의 경우 순수 CSR 컴포넌트이기 때문에 <code class="language-text">getServerSideProps</code>를 사용하지 않고 있었고, <code class="language-text">_app.tsx</code>의 <code class="language-text">getInitialProps</code>에서 리턴하는 props를 받지 못한 상태라 API 핸들러에서 사용하고자 하는 정보들을 가져오는 과정에서 오류가 발생한 것이었습니다.</p>
 <p>문제를 해결하기 위해 Player에서 getServerSideProps를 선언하여 props를 가져오도록 하였습니다.
-그리고 결정적으로 모든 페이지에서 userInfo를 가져와야 하기 때문에 _app.tsx에서 initialize를 해 주는 과정에 userInfo를 받아 오는 작업을 추가해 주었습니다.
+그리고 결정적으로 모든 페이지에서 userInfo를 가져와야 하기 때문에 <code class="language-text">_app.tsx</code>에서 initialize를 해 주는 과정에 userInfo를 받아 오는 작업을 추가해 주었습니다.
 그리고 dehydratedState로 리턴하도록 처리하였습니다.</p>
 <div class="gatsby-highlight" data-language="javascript"><pre class="language-javascript"><code class="language-javascript"><span class="token keyword">export</span> <span class="token keyword">const</span> <span class="token function-variable function">initialize</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token literal-property property">ctx</span><span class="token operator">:</span> any</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
   <span class="token keyword">const</span> <span class="token punctuation">{</span>
