@@ -190,6 +190,23 @@ App<span class="token punctuation">.</span><span class="token function-variable 
 
 <span class="token keyword">export</span> <span class="token keyword">default</span> App</code></pre></div>
 <p>이렇게 하면 각 페이지에서는 데이터를 따로 fetching하지 않아도 userInfo 값을 사용할 수 있게 됩니다.</p>
+<h3>(추가 이슈)</h3>
+<p>위 코드대로 구현하면 <code class="language-text">{ shallow: true }</code> 옵션을 사용하여 이동하거나 뒤로가기를 해도 user 정보를 계속 fetching하게 됩니다.</p>
+<p>따라서 최초 진입 시에만 API를 호출하도록 수정하였습니다.</p>
+<div class="gatsby-highlight" data-language="javascript"><pre class="language-javascript"><code class="language-javascript">App<span class="token punctuation">.</span><span class="token function-variable function">getInitialProps</span> <span class="token operator">=</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> Component<span class="token punctuation">,</span> pageProps<span class="token punctuation">,</span> ctx <span class="token punctuation">}</span><span class="token operator">:</span> any</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token function">initialize</span><span class="token punctuation">(</span>ctx<span class="token punctuation">)</span>
+
+  <span class="token keyword">const</span> isFromNext <span class="token operator">=</span> ctx<span class="token punctuation">.</span>req<span class="token operator">?.</span>url<span class="token punctuation">.</span><span class="token function">startsWith</span><span class="token punctuation">(</span><span class="token string">"/_next"</span><span class="token punctuation">)</span>
+  <span class="token keyword">return</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">props</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token operator">...</span><span class="token punctuation">(</span>isFromNext
+        <span class="token operator">?</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+        <span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token literal-property property">dehydratedState</span><span class="token operator">:</span> <span class="token function">dehydrate</span><span class="token punctuation">(</span><span class="token keyword">await</span> <span class="token function">getQueryClientForUserInfo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      Component<span class="token punctuation">,</span>
+      <span class="token literal-property property">pageProps</span><span class="token operator">:</span> pageProps <span class="token operator">||</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre></div>
 <h3>이슈2</h3>
 <p>userAgent 값을 분기 처리할 때 <code class="language-text">typeof window !== 'undefined'</code>라는 조건으로 CSR 여부를 판단하면 된다고 ChatGPT가 알려주었으나 실제로는 <code class="language-text">window</code>를 찾을 수 없다는 오류가 계속해서 발생했습니다.
 그래서 <code class="language-text">window</code>의 type으로 표시되는 <code class="language-text">globalThis</code> 조건을 추가하였더니 이슈가 해결되었습니다.</p>
