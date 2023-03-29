@@ -196,7 +196,6 @@ App.getInitialProps = async ({ Component, pageProps, ctx }: any) => {
 
   return {
     props: {
-      dehydratedState: dehydrate(await getQueryClientForUserInfo()),
       Component,
       pageProps: pageProps || {},
     },
