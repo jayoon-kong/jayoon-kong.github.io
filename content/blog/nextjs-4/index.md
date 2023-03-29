@@ -209,6 +209,29 @@ export default App
 
 이렇게 하면 각 페이지에서는 데이터를 따로 fetching하지 않아도 userInfo 값을 사용할 수 있게 됩니다.
 
+### (추가 이슈)
+
+위 코드대로 구현하면 `{ shallow: true }` 옵션을 사용하여 이동하거나 뒤로가기를 해도 user 정보를 계속 fetching하게 됩니다.
+
+따라서 최초 진입 시에만 API를 호출하도록 수정하였습니다.
+
+```javascript
+App.getInitialProps = async ({ Component, pageProps, ctx }: any) => {
+  initialize(ctx)
+
+  const isFromNext = ctx.req?.url.startsWith("/_next")
+  return {
+    props: {
+      ...(isFromNext
+        ? {}
+        : { dehydratedState: dehydrate(await getQueryClientForUserInfo()) }),
+      Component,
+      pageProps: pageProps || {},
+    },
+  }
+}
+```
+
 ### 이슈2
 
 userAgent 값을 분기 처리할 때 `typeof window !== 'undefined'`라는 조건으로 CSR 여부를 판단하면 된다고 ChatGPT가 알려주었으나 실제로는 `window`를 찾을 수 없다는 오류가 계속해서 발생했습니다.
