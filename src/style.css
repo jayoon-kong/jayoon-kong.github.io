@@ -393,7 +393,8 @@ main ol {
   margin-bottom: calc(var(--spacing-8) / 2);
 }
 
-.profile ul li {
+.profile ul li,
+.profile span.email {
   color: #868e96;
 }
 

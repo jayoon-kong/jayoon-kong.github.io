@@ -12,6 +12,7 @@ module.exports = {
     title: `공자윤의 기술블로그`,
     author: {
       name: `공자윤`,
+      email: `green2902@gmail.com`,
       summary: `SK플래닛 프론트엔드 개발자입니다.`,
     },
     description: `공자윤의 기술블로그`,

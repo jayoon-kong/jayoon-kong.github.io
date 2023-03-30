@@ -14,6 +14,7 @@ const Profile = ({ data, location }) => {
           <li className="title">Profile</li>
           <li>
             <span className="name">{author.name}</span>
+            <span className="email">{author.email}</span>
           </li>
           <li className="me">
             <span className="about">{author.summary}</span>
@@ -56,6 +57,7 @@ export const pageQuery = graphql`
         title
         author {
           name
+          email
           summary
         }
       }
