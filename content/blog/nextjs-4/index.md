@@ -155,7 +155,7 @@ user.ts에서 initialize가 되기 전에 API 핸들러가 호출된다는 내�
 그런데 Player의 경우 순수 CSR 컴포넌트이기 때문에 `getServerSideProps`를 사용하지 않고 있었고, `_app.tsx`의 `getInitialProps`에서 리턴하는 props를 받지 못한 상태라 API 핸들러에서 사용하고자 하는 정보들을 가져오는 과정에서 오류가 발생한 것이었습니다.
 
 문제를 해결하기 위해 Player에서 `getServerSideProps`를 선언하여 props를 가져오도록 하였습니다.
-그리고 `_app.tsx`에서 initialize를 해 주는 과정에 userInfo를 받아 오는 작업을 추가하려고 하였으나, `getInitialProps`가 `<Hydrate>`의 바깥에서 실행되기 때문에 결국 dehydratedState를 각 페이지로 전달하지 못한다는 사실을 발견하고 해당 코드는 my에서만 부르는 것으로 변경하였습니다.
+그리고 `_app.tsx`에서 initialize를 해 주는 과정에 userInfo를 받아 오는 작업을 추가하려고 하였으나, `getInitialProps`가 `<Hydrate>`의 바깥에서 실행되기 때문에 결국 `dehydratedState`를 각 페이지로 전달하지 못한다는 사실을 발견하고 해당 코드는 my에서만 부르는 것으로 변경하였습니다.
 
 ```javascript
 export const initialize = (ctx: any) => {
@@ -182,7 +182,6 @@ const App = ({ Component, pageProps }: AppProps) => {
     <QueryClientProvider client={queryClient}>
       <Hydrate state={pageProps?.dehydratedState}>
         <Layout>
-          <ToastManager bind={ToastHelper.bind} />
           <Component {...pageProps} />
         </Layout>
         <Navigation router={router} />
