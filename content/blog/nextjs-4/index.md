@@ -1,5 +1,5 @@
 ---
-title: "V 컬러링에 Next.js 도입하기 (4)"
+title: "Next.js 전환 과정 (4) - 쿠키 및 UserAgent 처리하기"
 date: "2023-03-29"
 tags: ["V컬러링", "next.js", "ssr", "csr", "react-query"]
 author: "jayoon"

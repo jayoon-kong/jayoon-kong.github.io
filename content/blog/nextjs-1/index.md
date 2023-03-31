@@ -1,5 +1,5 @@
 ---
-title: "V 컬러링에 Next.js 도입하기 (1)"
+title: "Next.js 전환 과정 (1) - 기초 설계"
 date: "2023-03-05"
 tags: ["V컬러링", "next.js", "ssr", "csr"]
 author: "jayoon"

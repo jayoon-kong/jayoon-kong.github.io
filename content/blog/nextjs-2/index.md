@@ -1,5 +1,5 @@
 ---
-title: "V 컬러링에 Next.js 도입하기 (2)"
+title: "Next.js 전환 과정 (2) - 렌더링 방식 결정하기"
 date: "2023-03-13"
 tags: ["V컬러링", "next.js", "ssr", "csr", "react-query"]
 author: "jayoon"
