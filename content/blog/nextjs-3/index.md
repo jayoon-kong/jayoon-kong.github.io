@@ -3,7 +3,7 @@ title: "Next.js 전환 과정 (3) - 인증 및 토큰 처리하기"
 date: "2023-03-23"
 tags: ["V컬러링", "next.js", "ssr", "csr", "react-query"]
 author: "jayoon"
-description: "React로 구현된 SPA (CSR) 프로젝트를 Next.js로 Migration하는 과정"
+description: "React로 구현된 SPA (CSR) 프로젝트를 Next.js로 전환하는 과정"
 ---
 
 본 포스팅에서는 로그인 여부에 따라 각자 다른 페이지를 리턴하고, 세션을 관리하는 방법에 대해 작성해 보도록 하겠습니다.

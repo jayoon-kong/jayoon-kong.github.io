@@ -3,7 +3,7 @@ title: "Next.js 전환 과정 (2) - 렌더링 방식 결정하기"
 date: "2023-03-13"
 tags: ["V컬러링", "next.js", "ssr", "csr", "react-query"]
 author: "jayoon"
-description: "React로 구현된 SPA (CSR) 프로젝트를 Next.js로 Migration하는 과정"
+description: "React로 구현된 SPA (CSR) 프로젝트를 Next.js로 전환하는 과정"
 ---
 
 본 포스팅에서는 비디오 상세 화면 라우터 처리 부분과, 실제 비디오 화면의 구조를 어떻게 개선하였는지를 중점적으로 다룰 예정입니다.

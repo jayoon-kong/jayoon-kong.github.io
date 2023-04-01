@@ -3,7 +3,7 @@ title: "Next.js 전환 과정 (1) - 기초 설계"
 date: "2023-03-05"
 tags: ["V컬러링", "next.js", "ssr", "csr"]
 author: "jayoon"
-description: "React로 구현된 SPA (CSR) 프로젝트를 Next.js로 Migration하는 과정"
+description: "React로 구현된 SPA (CSR) 프로젝트를 Next.js로 전환하는 과정"
 ---
 
 V 컬러링은 2020년에 처음 만들어진 SPA(Single Application Application) 형태의 모바일 웹입니다.

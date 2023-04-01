@@ -3,7 +3,7 @@ title: "Next.js 전환 과정 (4) - 쿠키 및 UserAgent 처리하기"
 date: "2023-03-29"
 tags: ["V컬러링", "next.js", "ssr", "csr", "react-query"]
 author: "jayoon"
-description: "React로 구현된 SPA (CSR) 프로젝트를 Next.js로 Migration하는 과정"
+description: "React로 구현된 SPA (CSR) 프로젝트를 Next.js로 전환하는 과정"
 ---
 
 이번 포스팅에서는 공통 핸들러 처리에 대해 정리해 보도록 하겠습니다.
