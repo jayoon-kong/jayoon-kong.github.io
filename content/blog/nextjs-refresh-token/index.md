@@ -182,33 +182,6 @@ const initialize = async (ctx: any) => {
 }
 ```
 
-그리고 이렇게 받아온 토큰 값은 페이지의 props로 전달하면 클라이언트에서 접근이 가능합니다.
-
-```javascript
-App.getInitialProps = async ({ Component, pageProps, ctx }: any) => {
-  const newToken = await initialize(ctx)
-
-  return {
-    props: {
-      Component,
-      pageProps: pageProps || {},
-      ...(newToken ? newToken : {}),
-    },
-  }
-}
-```
-
-```javascript
-const App = ({ Component, pageProps, newToken }: IAppProps) => {
-  const [queryClient] = useState(() => new QueryClient());
-
-  if (newToken) {
-    TokenHelper.setToken(newToken);
-  }
-	...
-}
-```
-
-`hydration`으로 전달된 newToken 값을 클라이언트 사이드에서 받아서 쿠키로 세팅하는 작업을 해주었습니다.
+이렇게 하면 새로운 토큰 값이 브라우저의 쿠키에 세팅되어 클라이언트에서 접근이 가능합니다.
 
 이제 서버사이드와 클라이언트사이드 모든 API 호출 시 자동로그인이 잘 동작합니다. 🙂
