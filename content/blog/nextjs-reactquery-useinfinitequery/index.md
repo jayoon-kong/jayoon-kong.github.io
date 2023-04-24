@@ -6,7 +6,7 @@ author: "jayoon"
 description: "React로 구현된 SPA (CSR) 프로젝트를 Next.js로 전환하는 과정"
 ---
 
-`Next.js` 프로젝트 수행 시 함께 진행하는 중요 과제로 **기존의 Redux를 걷어내고 모든 fetch data를 React Query로 관리하기**가 있습니다.
+Next.js 프로젝트 수행 시 함께 진행하는 중요 과제로 **기존의 Redux를 걷어내고 모든 fetch data를 React Query로 관리하기**가 있습니다.
 <br />
 이번 포스팅에서는 무한스크롤 시 `react query`를 사용해서 데이터를 가져온 과정을 정리해 보겠습니다.
 
