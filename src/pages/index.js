@@ -58,11 +58,7 @@ const BlogIndex = ({ data, location }) => {
 }
 
 export const Head = () => {
-  return (
-    <Seo
-      title="공자윤의 기술블로그"
-    />
-  )
+  return <Seo title="공자윤의 기술블로그" />
 }
 
 export default BlogIndex

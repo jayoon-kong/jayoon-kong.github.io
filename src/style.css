@@ -360,7 +360,7 @@ main ol {
 .blog-post ul,
 .blog-post ol {
   padding-left: var(--spacing-8);
-  margin: var(--spacing-8) var(--spacing-0);
+  margin: var(--spacing-4) var(--spacing-0);
 }
 
 .blog-post ol li {
@@ -369,6 +369,11 @@ main ol {
 
 .blog-post li {
   margin-bottom: var(--spacing-4);
+}
+
+.blog-post ol li:last-child,
+.blog-post ul li:last-child {
+  margin-bottom: var(--spacing-8);
 }
 
 .blog-post section p {
