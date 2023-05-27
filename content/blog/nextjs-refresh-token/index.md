@@ -1,5 +1,5 @@
 ---
-title: "Next.js 전환 과정 (5) - 자동로그인 (토큰 갱신)"
+title: "Next.js 전환 과정 (4) - 자동로그인 (토큰 갱신)"
 date: "2023-04-04"
 tags: ["V컬러링", "next.js", "ssr", "csr", "react-query"]
 author: "jayoon"
@@ -128,13 +128,7 @@ _흐름을 쉽게 정리하자면, **페이지 요청에 담긴 쿠키를 빼�
 
 ```javascript
 // _app.tsx
-const setToken = (token: string, refreshToken?: string, expired?: number) => {
-  RequestHandler.setServerToken(token)
-  RequestHandler.setServerRefreshToken(refreshToken)
-  RequestHandler.setServerExpired(expired)
-}
-
-const getNewToken = (
+const setNewToken = (
   res: any,
   token: string,
   refreshToken?: string,
@@ -147,13 +141,6 @@ const getNewToken = (
     `refreshToken=${refreshToken}; path=/; expires=${time}`,
     `expired=${expired}; path=/; expires=${time}}`,
   ])
-  setToken(token, refreshToken, expired)
-
-  return {
-    token,
-    refreshToken,
-    expired,
-  }
 }
 
 const initialize = async (ctx: any) => {
@@ -162,7 +149,7 @@ const initialize = async (ctx: any) => {
     res,
   } = ctx
 
-  setToken(cookies?.token, cookies?.refreshToken, cookies?.expired)
+  setNewToken(rew, cookies?.token, cookies?.refreshToken, cookies?.expired)
   RequestHandler.setServerAgent(headers ? headers["user-agent"] : undefined)
 
   if (TokenHelper.needRefresh()) {
@@ -170,12 +157,7 @@ const initialize = async (ctx: any) => {
     const { access_token, refresh_token, expires_in } = response
 
     if (access_token) {
-      return getNewToken(
-        res,
-        access_token,
-        refresh_token,
-        Date.now() + expires_in
-      )
+      setNewToken(res, access_token, refresh_token, Date.now() + expires_in)
     }
   }
   return
