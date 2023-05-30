@@ -16,71 +16,131 @@ description: "React로 구현된 SPA (CSR) 프로젝트를 Next.js로 전환하�
 
 여러 가지 방법을 검색해 보고 라이브러리도 찾아본 끝에, 결국 양쪽에서 자유롭게 사용하기 위해 토큰을 쿠키에 저장하는 것이 가장 좋겠다는 결론을 내렸습니다. httpOnly 속성을 서버에서 리턴해 주면 좋겠지만 현재 구조적으로 그렇게 설계되어 있지 않고, 또 SSR에서는 로컬스토리지에 접근할 수 없기 때문에 양쪽에서 모두 쓸 수 있는 쿠키로 선택하게 되었습니다.
 
-SSR과 CSR 모두에서 접근이 가능한 `js-cookie` 라이브러리를 설치하고 먼저 로그인 페이지에서 로그인을 하는 로직을 구현한 뒤, 로그인 성공 후 토큰을 쿠키에 저장하는 부분을 구현하였습니다.
+먼저 `react-cookie` 라이브러리를 설치하고 로그인 페이지에서 로그인을 하는 로직을 구현한 뒤, 로그인 성공 후 토큰을 쿠키에 저장하는 부분을 구현하였습니다.
 
 ```javascript
-// set token
-import Cookies from "js-cookie"
+// 로그인 성공 이후 처리
+TokenHelper.setToken({
+  token: token.access_token,
+  refreshToken: token.refresh_token,
+  expired: Date.now() + token.expires_in * 1000,
+});
 
-export const setToken = () => {
-  Cookies.set("token", token.token, { expires: 30, path: "/" })
-  Cookies.set("refreshToken", token.refreshToken, { expires: 30, path: "/" })
-  Cookies.set("expired", token.expired.toString(), { expires: 30, path: "/" })
-}
+// TokenHelper
+import { Cookies } from 'react-cookie';
 
-//login
-const setUserInfoAfterLogin = () => {
-  router.replace("/my")
-}
+public static cookie = new Cookies();
+public static setToken(params: VRAuth.IToken) {
+  if (params) {
+    const { token, refreshToken, expired } = params;
 
-const login = async (username: number, authKey: string) => {
-  const res = AuthApi.getToken(username, authKey).then((res: any) => {
-    if (res.access_token) {
-      setUserInfoAfterLogin()
-    }
-  })
+    this.cookie.set('token', token, { path: '/', expires: new Date(expired) });
+    this.cookie.set('refreshToken', refreshToken, { path: '/', expires: new Date(expired * 60) });
+    this.cookie.set('expired', expired, { path: '/', expires: new Date(expired) });
+  }
 }
 ```
 
-다음은 my.tsx에서 세션 유무를 체크하였습니다.
+로그인은 클라이언트 사이드에서 이루어지기 때문에, 서버 사이드에서 `getInitialProps`으로 접근했을 때 쿠키가 날아가지 않도록 서버 사이드에서도 세팅을 해 줍니다.
+먼저 `CookiesProvider`로 app을 감싸고, 서버의 쿠키를 쉽게 가져올 수 있도록 `next-cookies`를 추가로 설치하였습니다.
 
 ```javascript
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const queryClient = new QueryClient()
+import { CookiesProvider } from 'react-cookie';
+import cookies from 'next-cookies';
+...
 
-  // 쿠키에서 토큰 정보를 추출한 뒤 header의 Authorization에 추가해 줍니다.
-  const token = req.cookies.token
-  if (token) {
-    axios.defaults.headers["Authorization"] = `Bearer ${token}`
-  }
+const App = () => {
+  return (
+    <CookiesProvider>
+      <Layout>
+        ...
+      </Layout>
+    </CookiesProvider>
+  );
+}
 
-  const { data: userInfo } = await queryClient.fetchQuery(
-    [QueryKey.GET_USER_INFO],
-    UserApi.getUserInfo,
-    {
-      staleTime: 60 * 60 * 1000,
-      cacheTime: Infinity,
-    }
-  )
-
-  if (!userInfo) {
-    return { redirect: { destination: "/login?my", permanent: false } }
-  }
-
-  const dehydrateState = dehydrate(queryClient)
-
+App.getInitialProps = ({ Component, pageProps, ctx }: any) => {
+  initializeToken(ctx);
   return {
     props: {
-      dehydrateState,
-      userInfo,
+      Component,
+      pageProps: pageProps || {},
     },
+  };
+};
+
+export const initializeToken = async (ctx: any) => {
+  const { req: { headers } = {} as any } = ctx;
+  const { token, refreshToken, expired } = cookies(ctx);
+
+  if (token && refreshToken && expired) {
+    instance.defaults.headers.Authorization = `Bearer ${token}`; // 헤더에 토큰 정보 저장
+    TokenHelper.setToken({ token, refreshToken, expired: Number(expired) });
+
+    // 자동 갱신
+    if (Number(expired) < Date.now()) {
+      const response = await updateToken(refreshToken);
+      const { access_token, refresh_token, expires_in } = response;
+
+      if (access_token) {
+        instance.defaults.headers.Authorization = `Bearer ${token}`;
+        TokenHelper.setToken({
+          token: access_token,
+          refreshToken: refresh_token,
+          expired: Date.now() + expires_in * 1000,
+        });
+      }
+    }
+    return;
   }
-}
+
+  delete instance.defaults.headers.Authorization;
+  TokenHelper.clearToken();
+};
+```
+
+다음은 my.tsx에서 세션 유무를 체크하여 세션이 없는 경우 로그인 페이지로 리다이렉트 처리를 합니다.
+login.tsx에서도 마찬가지로 처리합니다.
+
+```javascript
+// my.tsx
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  initializeToken(ctx);
+
+  const { query } = ctx;
+  const param = searchParams(query as IParameters);
+
+  const { token, expired } = cookies(ctx);
+
+  if (!token || Number(expired) < Date.now()) {
+    if (EnvChecker.isApp()) {
+      return { props: {} };
+    }
+    return { redirect: { destination: `/login?my${param ? `&${param}` : ''}`, permanent: true } };
+  }
+
+  return { props: {} };
+};
+
+export default memo(My);
+
+// login.tsx
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  initializeToken(ctx);
+
+  const { token, expired } = cookies(ctx);
+
+  if (token && Number(expired) > Date.now()) {
+    return { redirect: { destination: `/${redirectTo()}`, permanent: false } };
+  }
+
+  return { props: {} };
+};
 ```
 
 ### 이슈
 
-이렇게 구현했더니 새로고침 시에는 마이페이지가 정상적으로 로드되는데, 로그인 및 토큰을 셋팅한 직후에는 그대로 로그인 페이지에 머물러 있는 이슈가 발생했습니다. 로그를 찍어 보니 인증 오류 이슈였습니다.
+처음에 구현했을 때 새로고침 시에는 마이페이지가 정상적으로 로드되는데, 로그인 및 토큰을 셋팅한 직후에는 그대로 로그인 페이지에 머물러 있는 이슈가 발생했습니다. 로그를 찍어 보니 인증 오류 이슈였습니다.
 
 참고로 오류가 났을 때의 axios instance의 interceptor 코드입니다.
 
@@ -102,34 +162,39 @@ instance.interceptors.request.use(
 )
 ```
 
-axios의 interceptors에서는 토큰 값을 가져왔다 가져오지 못했다 하는 이슈가 있었습니다. 로그를 보며 현상을 파악해 보니 클라이언트 사이드에서 호출했을 때에만 Cookies.get(’token’)을 가져올 수 있다는 사실을 발견할 수 있었습니다.
+axios의 interceptors에서는 토큰 값을 가져왔다 가져오지 못했다 하는 이슈가 있었습니다.
+로그를 보며 현상을 파악해 보니 클라이언트 사이드에서 호출했을 때에만 Cookies.get(’token’)을 가져올 수 있다는 사실을 발견할 수 있었습니다.
 
-그래서 코드를 다음과 같이 수정하였습니다.
+그래서 `initializeToken`에서 axios instance의 헤더에 값을 세팅하고, 요청 interceptors의 코드를 다음과 같이 수정하였습니다.
 
 ```javascript
-const getToken = () => {
-  const auth = axios.defaults.headers.Authorization // 디폴트 헤더 값을 먼저 가져옴
-  if (auth) {
-    return auth
+export const initializeToken = async (ctx: any) => {
+  ...
+  if (token && refreshToken && expired) {
+    instance.defaults.headers.Authorization = `Bearer ${token}`; // 헤더에 토큰 정보 저장
+    TokenHelper.setToken({ token, refreshToken, expired: Number(expired) });
+    ...
   }
-
-  const token = Token.getToken() // 없는 경우에 쿠키에서 직접 가져옴
-  if (token) {
-    return `Bearer ${token}`
-  }
-
-  return null
-}
+  delete instance.defaults.headers.Authorization;
+  TokenHelper.clearToken();
+};
 
 // 요청 인터셉터
 instance.interceptors.request.use(
   config => {
-    // 요청 전에 수행할 작업
-    const token = getToken()
-    if (token && !config.url?.includes("oauth")) {
-      config.headers.Authorization = token
-    }
-    return config
+    // 요청 데이터 처리
+    return merge(getConfig(), config);
+
+    export const getConfig = (): AxiosRequestConfig => {
+      const token = TokenHelper.getToken();
+
+      return {
+        headers: {
+          ...,
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        } as Record<string, string>
+      };
+    };
   },
   error => {
     // 요청 오류 처리
@@ -138,7 +203,7 @@ instance.interceptors.request.use(
 )
 ```
 
-서버사이드에서 `req.cookies.token` 으로 가져온 값을 디폴트 헤더에 넣었기 때문에 SSR인 경우 헤더 값이 있으므로 그 값을 사용하고, 없는 경우는 CSR이므로 쿠키에 접근하여 토큰을 가져오도록 처리하였습니다.
+서버사이드에서 req의 헤더에 있는 쿠키 정보로 가져온 토큰 값을 디폴트 헤더에 넣었기 때문에 SSR인 경우 헤더 값이 있으므로 그 값을 사용하고, 없는 경우는 CSR이므로 쿠키에 접근하여 토큰을 가져오도록 처리하였습니다.
 
 이렇게 했더니 로그인 페이지에서 세션이 없는 경우에는 로그인 페이지가, 세션이 있는 경우에는 마이 페이지가 리턴되었습니다. 그리고 로그아웃 후 로그인 시에도 자연스럽게 화면이 전환되는 것을 확인할 수 있었습니다.
 

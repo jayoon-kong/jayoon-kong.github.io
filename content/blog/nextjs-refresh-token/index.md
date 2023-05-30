@@ -124,43 +124,30 @@ _흐름을 쉽게 정리하자면, **페이지 요청에 담긴 쿠키를 빼�
 
 출처 : [https://9yujin.tistory.com/104](https://9yujin.tistory.com/104)
 
-`_app.tsx` 진입 시 initialize를 호출하는 부분에서 토큰 값을 갱신하고, 받아온 토큰 값을 응답 헤더에 세팅하도록 구현하였습니다.
+`_app.tsx` 진입 시 initialize를 호출하는 부분에서 토큰 값을 갱신하고, 받아온 토큰 값을 응답 헤더에 세팅하도록 구현하였습니다. ([이전 포스팅](https://jayoon-kong.github.io/nextjs-authentication) 참조)
 
 ```javascript
-// _app.tsx
-const setNewToken = (
-  res: any,
-  token: string,
-  refreshToken?: string,
-  expired?: number
-) => {
-  const time = new Date().getTime()
+// TokenHelper.tsx
+public static setToken(params: VRAuth.IToken) {
+  if (params) {
+    const { token, refreshToken, expired } = params;
 
-  res.setHeader("Set-Cookie", [
-    `token=${token}; path=/; expires=${time}`,
-    `refreshToken=${refreshToken}; path=/; expires=${time}`,
-    `expired=${expired}; path=/; expires=${time}}`,
-  ])
+    this.cookie.set('token', token, { path: '/', expires: new Date(expired) });
+    // 만료 시 refreshToken을 꺼내야 하는데, 기간이 같이 만료되면 안되기 때문에 길게 세팅
+    this.cookie.set('refreshToken', refreshToken, { path: '/', expires: new Date(expired * 60) });
+    this.cookie.set('expired', expired, { path: '/', expires: new Date(expired) });
+  }
 }
 
-const initialize = async (ctx: any) => {
-  const {
-    req: { cookies, headers, query },
-    res,
-  } = ctx
+const initializeToken = async (ctx: any) => {
+  const { req: { headers } = {} as any } = ctx;
+  const { token, refreshToken, expired } = cookies(ctx);
 
-  setNewToken(rew, cookies?.token, cookies?.refreshToken, cookies?.expired)
-  RequestHandler.setServerAgent(headers ? headers["user-agent"] : undefined)
-
-  if (TokenHelper.needRefresh()) {
-    const response = await updateToken()
-    const { access_token, refresh_token, expires_in } = response
-
-    if (access_token) {
-      setNewToken(res, access_token, refresh_token, Date.now() + expires_in)
-    }
+  if (token && refreshToken && expired) {
+    instance.defaults.headers.Authorization = `Bearer ${token}`; // 헤더에 토큰 정보 저장
+    TokenHelper.setToken({ token, refreshToken, expired: Number(expired) });
+    ...
   }
-  return
 }
 ```
 
