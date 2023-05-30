@@ -74,7 +74,6 @@ export const initializeToken = async (ctx: any) => {
   const { token, refreshToken, expired } = cookies(ctx);
 
   if (token && refreshToken && expired) {
-    instance.defaults.headers.Authorization = `Bearer ${token}`; // 헤더에 토큰 정보 저장
     TokenHelper.setToken({ token, refreshToken, expired: Number(expired) });
 
     // 자동 갱신
@@ -83,7 +82,6 @@ export const initializeToken = async (ctx: any) => {
       const { access_token, refresh_token, expires_in } = response;
 
       if (access_token) {
-        instance.defaults.headers.Authorization = `Bearer ${token}`;
         TokenHelper.setToken({
           token: access_token,
           refreshToken: refresh_token,
@@ -93,20 +91,16 @@ export const initializeToken = async (ctx: any) => {
     }
     return;
   }
-
-  delete instance.defaults.headers.Authorization;
   TokenHelper.clearToken();
 };
 ```
 
-다음은 my.tsx에서 세션 유무를 체크하여 세션이 없는 경우 로그인 페이지로 리다이렉트 처리를 합니다.
-login.tsx에서도 마찬가지로 처리합니다.
+다음은 `my.tsx`에서 세션 유무를 체크하여 세션이 없는 경우 로그인 페이지로 리다이렉트 처리를 합니다.
+`login.tsx`에서도 마찬가지로 처리합니다.
 
 ```javascript
 // my.tsx
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  initializeToken(ctx);
-
   const { query } = ctx;
   const param = searchParams(query as IParameters);
 
@@ -126,8 +120,6 @@ export default memo(My);
 
 // login.tsx
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  initializeToken(ctx);
-
   const { token, expired } = cookies(ctx);
 
   if (token && Number(expired) > Date.now()) {
@@ -138,75 +130,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 };
 ```
 
-### 이슈
-
-처음에 구현했을 때 새로고침 시에는 마이페이지가 정상적으로 로드되는데, 로그인 및 토큰을 셋팅한 직후에는 그대로 로그인 페이지에 머물러 있는 이슈가 발생했습니다. 로그를 찍어 보니 인증 오류 이슈였습니다.
-
-참고로 오류가 났을 때의 axios instance의 interceptor 코드입니다.
-
-```javascript
-// 요청 인터셉터
-instance.interceptors.request.use(
-  config => {
-    // 요청 전에 수행할 작업
-    const token = Token.getToken() // Cookies.get('token')
-    if (token) {
-      config.headers.Authorization = token
-    }
-    return config
-  },
-  error => {
-    // 요청 오류 처리
-    return Promise.reject(error)
-  }
-)
-```
-
-axios의 interceptors에서는 토큰 값을 가져왔다 가져오지 못했다 하는 이슈가 있었습니다.
-로그를 보며 현상을 파악해 보니 클라이언트 사이드에서 호출했을 때에만 Cookies.get(’token’)을 가져올 수 있다는 사실을 발견할 수 있었습니다.
-
-그래서 `initializeToken`에서 axios instance의 헤더에 값을 세팅하고, 요청 interceptors의 코드를 다음과 같이 수정하였습니다.
-
-```javascript
-export const initializeToken = async (ctx: any) => {
-  ...
-  if (token && refreshToken && expired) {
-    instance.defaults.headers.Authorization = `Bearer ${token}`; // 헤더에 토큰 정보 저장
-    TokenHelper.setToken({ token, refreshToken, expired: Number(expired) });
-    ...
-  }
-  delete instance.defaults.headers.Authorization;
-  TokenHelper.clearToken();
-};
-
-// 요청 인터셉터
-instance.interceptors.request.use(
-  config => {
-    // 요청 데이터 처리
-    return merge(getConfig(), config);
-
-    export const getConfig = (): AxiosRequestConfig => {
-      const token = TokenHelper.getToken();
-
-      return {
-        headers: {
-          ...,
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        } as Record<string, string>
-      };
-    };
-  },
-  error => {
-    // 요청 오류 처리
-    return Promise.reject(error)
-  }
-)
-```
-
-서버사이드에서 req의 헤더에 있는 쿠키 정보로 가져온 토큰 값을 디폴트 헤더에 넣었기 때문에 SSR인 경우 헤더 값이 있으므로 그 값을 사용하고, 없는 경우는 CSR이므로 쿠키에 접근하여 토큰을 가져오도록 처리하였습니다.
-
 이렇게 했더니 로그인 페이지에서 세션이 없는 경우에는 로그인 페이지가, 세션이 있는 경우에는 마이 페이지가 리턴되었습니다. 그리고 로그아웃 후 로그인 시에도 자연스럽게 화면이 전환되는 것을 확인할 수 있었습니다.
 
-(next.js의 /api를 활용하여 쿠키를 httponly로 다시 세팅하여 이용하는 방법도 고민중입니다.)
+(next.js의 /api를 활용하여 쿠키를 httpOnly로 다시 세팅하여 이용하는 방법도 고민중입니다.)
 
 가장 삽질을 많이 했지만 많이 배울 수 있었던 경험이었습니다. 😊
