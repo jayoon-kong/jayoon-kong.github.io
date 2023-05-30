@@ -57,7 +57,6 @@ App<span class="token punctuation">.</span><span class="token function-variable 
   <span class="token keyword">const</span> <span class="token punctuation">{</span> token<span class="token punctuation">,</span> refreshToken<span class="token punctuation">,</span> expired <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">cookies</span><span class="token punctuation">(</span>ctx<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token keyword">if</span> <span class="token punctuation">(</span>token <span class="token operator">&amp;&amp;</span> refreshToken <span class="token operator">&amp;&amp;</span> expired<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    instance<span class="token punctuation">.</span>defaults<span class="token punctuation">.</span>headers<span class="token punctuation">.</span>Authorization <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Bearer </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>token<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span> <span class="token comment">// 헤더에 토큰 정보 저장</span>
     TokenHelper<span class="token punctuation">.</span><span class="token function">setToken</span><span class="token punctuation">(</span><span class="token punctuation">{</span> token<span class="token punctuation">,</span> refreshToken<span class="token punctuation">,</span> <span class="token literal-property property">expired</span><span class="token operator">:</span> <span class="token function">Number</span><span class="token punctuation">(</span>expired<span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token comment">// 자동 갱신</span>
@@ -66,7 +65,6 @@ App<span class="token punctuation">.</span><span class="token function-variable 
       <span class="token keyword">const</span> <span class="token punctuation">{</span> access_token<span class="token punctuation">,</span> refresh_token<span class="token punctuation">,</span> expires_in <span class="token punctuation">}</span> <span class="token operator">=</span> response<span class="token punctuation">;</span>
 
       <span class="token keyword">if</span> <span class="token punctuation">(</span>access_token<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        instance<span class="token punctuation">.</span>defaults<span class="token punctuation">.</span>headers<span class="token punctuation">.</span>Authorization <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Bearer </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>token<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
         TokenHelper<span class="token punctuation">.</span><span class="token function">setToken</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
           <span class="token literal-property property">token</span><span class="token operator">:</span> access_token<span class="token punctuation">,</span>
           <span class="token literal-property property">refreshToken</span><span class="token operator">:</span> refresh_token<span class="token punctuation">,</span>
@@ -76,16 +74,12 @@ App<span class="token punctuation">.</span><span class="token function-variable 
     <span class="token punctuation">}</span>
     <span class="token keyword">return</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
-
-  <span class="token keyword">delete</span> instance<span class="token punctuation">.</span>defaults<span class="token punctuation">.</span>headers<span class="token punctuation">.</span>Authorization<span class="token punctuation">;</span>
   TokenHelper<span class="token punctuation">.</span><span class="token function">clearToken</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></div>
-<p>다음은 my.tsx에서 세션 유무를 체크하여 세션이 없는 경우 로그인 페이지로 리다이렉트 처리를 합니다.
-login.tsx에서도 마찬가지로 처리합니다.</p>
+<p>다음은 <code class="language-text">my.tsx</code>에서 세션 유무를 체크하여 세션이 없는 경우 로그인 페이지로 리다이렉트 처리를 합니다.
+<code class="language-text">login.tsx</code>에서도 마찬가지로 처리합니다.</p>
 <div class="gatsby-highlight" data-language="javascript"><pre class="language-javascript"><code class="language-javascript"><span class="token comment">// my.tsx</span>
 <span class="token keyword">export</span> <span class="token keyword">const</span> <span class="token literal-property property">getServerSideProps</span><span class="token operator">:</span> <span class="token function-variable function">GetServerSideProps</span> <span class="token operator">=</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">ctx</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-  <span class="token function">initializeToken</span><span class="token punctuation">(</span>ctx<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
   <span class="token keyword">const</span> <span class="token punctuation">{</span> query <span class="token punctuation">}</span> <span class="token operator">=</span> ctx<span class="token punctuation">;</span>
   <span class="token keyword">const</span> param <span class="token operator">=</span> <span class="token function">searchParams</span><span class="token punctuation">(</span>query <span class="token keyword">as</span> IParameters<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
@@ -105,8 +99,6 @@ login.tsx에서도 마찬가지로 처리합니다.</p>
 
 <span class="token comment">// login.tsx</span>
 <span class="token keyword">export</span> <span class="token keyword">const</span> <span class="token literal-property property">getServerSideProps</span><span class="token operator">:</span> <span class="token function-variable function">GetServerSideProps</span> <span class="token operator">=</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">ctx</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-  <span class="token function">initializeToken</span><span class="token punctuation">(</span>ctx<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
   <span class="token keyword">const</span> <span class="token punctuation">{</span> token<span class="token punctuation">,</span> expired <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">cookies</span><span class="token punctuation">(</span>ctx<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token keyword">if</span> <span class="token punctuation">(</span>token <span class="token operator">&amp;&amp;</span> <span class="token function">Number</span><span class="token punctuation">(</span>expired<span class="token punctuation">)</span> <span class="token operator">></span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -115,63 +107,8 @@ login.tsx에서도 마찬가지로 처리합니다.</p>
 
   <span class="token keyword">return</span> <span class="token punctuation">{</span> <span class="token literal-property property">props</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></div>
-<h3>이슈</h3>
-<p>처음에 구현했을 때 새로고침 시에는 마이페이지가 정상적으로 로드되는데, 로그인 및 토큰을 셋팅한 직후에는 그대로 로그인 페이지에 머물러 있는 이슈가 발생했습니다. 로그를 찍어 보니 인증 오류 이슈였습니다.</p>
-<p>참고로 오류가 났을 때의 axios instance의 interceptor 코드입니다.</p>
-<div class="gatsby-highlight" data-language="javascript"><pre class="language-javascript"><code class="language-javascript"><span class="token comment">// 요청 인터셉터</span>
-instance<span class="token punctuation">.</span>interceptors<span class="token punctuation">.</span>request<span class="token punctuation">.</span><span class="token function">use</span><span class="token punctuation">(</span>
-  <span class="token parameter">config</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-    <span class="token comment">// 요청 전에 수행할 작업</span>
-    <span class="token keyword">const</span> token <span class="token operator">=</span> Token<span class="token punctuation">.</span><span class="token function">getToken</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// Cookies.get('token')</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>token<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      config<span class="token punctuation">.</span>headers<span class="token punctuation">.</span>Authorization <span class="token operator">=</span> token
-    <span class="token punctuation">}</span>
-    <span class="token keyword">return</span> config
-  <span class="token punctuation">}</span><span class="token punctuation">,</span>
-  <span class="token parameter">error</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-    <span class="token comment">// 요청 오류 처리</span>
-    <span class="token keyword">return</span> Promise<span class="token punctuation">.</span><span class="token function">reject</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">)</span></code></pre></div>
-<p>axios의 interceptors에서는 토큰 값을 가져왔다 가져오지 못했다 하는 이슈가 있었습니다.
-로그를 보며 현상을 파악해 보니 클라이언트 사이드에서 호출했을 때에만 Cookies.get(’token’)을 가져올 수 있다는 사실을 발견할 수 있었습니다.</p>
-<p>그래서 <code class="language-text">initializeToken</code>에서 axios instance의 헤더에 값을 세팅하고, 요청 interceptors의 코드를 다음과 같이 수정하였습니다.</p>
-<div class="gatsby-highlight" data-language="javascript"><pre class="language-javascript"><code class="language-javascript"><span class="token keyword">export</span> <span class="token keyword">const</span> <span class="token function-variable function">initializeToken</span> <span class="token operator">=</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token literal-property property">ctx</span><span class="token operator">:</span> any</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-  <span class="token operator">...</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span>token <span class="token operator">&amp;&amp;</span> refreshToken <span class="token operator">&amp;&amp;</span> expired<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    instance<span class="token punctuation">.</span>defaults<span class="token punctuation">.</span>headers<span class="token punctuation">.</span>Authorization <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Bearer </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>token<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span> <span class="token comment">// 헤더에 토큰 정보 저장</span>
-    TokenHelper<span class="token punctuation">.</span><span class="token function">setToken</span><span class="token punctuation">(</span><span class="token punctuation">{</span> token<span class="token punctuation">,</span> refreshToken<span class="token punctuation">,</span> <span class="token literal-property property">expired</span><span class="token operator">:</span> <span class="token function">Number</span><span class="token punctuation">(</span>expired<span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token operator">...</span>
-  <span class="token punctuation">}</span>
-  <span class="token keyword">delete</span> instance<span class="token punctuation">.</span>defaults<span class="token punctuation">.</span>headers<span class="token punctuation">.</span>Authorization<span class="token punctuation">;</span>
-  TokenHelper<span class="token punctuation">.</span><span class="token function">clearToken</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-
-<span class="token comment">// 요청 인터셉터</span>
-instance<span class="token punctuation">.</span>interceptors<span class="token punctuation">.</span>request<span class="token punctuation">.</span><span class="token function">use</span><span class="token punctuation">(</span>
-  <span class="token parameter">config</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-    <span class="token comment">// 요청 데이터 처리</span>
-    <span class="token keyword">return</span> <span class="token function">merge</span><span class="token punctuation">(</span><span class="token function">getConfig</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> config<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token keyword">export</span> <span class="token keyword">const</span> getConfig <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token parameter">AxiosRequestConfig</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-      <span class="token keyword">const</span> token <span class="token operator">=</span> TokenHelper<span class="token punctuation">.</span><span class="token function">getToken</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-      <span class="token keyword">return</span> <span class="token punctuation">{</span>
-        <span class="token literal-property property">headers</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-          <span class="token operator">...</span><span class="token punctuation">,</span>
-          <span class="token operator">...</span><span class="token punctuation">(</span>token <span class="token operator">?</span> <span class="token punctuation">{</span> <span class="token literal-property property">Authorization</span><span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Bearer </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>token<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span> <span class="token punctuation">}</span> <span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-        <span class="token punctuation">}</span> <span class="token keyword">as</span> Record<span class="token operator">&lt;</span>string<span class="token punctuation">,</span> string<span class="token operator">></span>
-      <span class="token punctuation">}</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span><span class="token punctuation">,</span>
-  <span class="token parameter">error</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
-    <span class="token comment">// 요청 오류 처리</span>
-    <span class="token keyword">return</span> Promise<span class="token punctuation">.</span><span class="token function">reject</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">)</span></code></pre></div>
-<p>서버사이드에서 req의 헤더에 있는 쿠키 정보로 가져온 토큰 값을 디폴트 헤더에 넣었기 때문에 SSR인 경우 헤더 값이 있으므로 그 값을 사용하고, 없는 경우는 CSR이므로 쿠키에 접근하여 토큰을 가져오도록 처리하였습니다.</p>
 <p>이렇게 했더니 로그인 페이지에서 세션이 없는 경우에는 로그인 페이지가, 세션이 있는 경우에는 마이 페이지가 리턴되었습니다. 그리고 로그아웃 후 로그인 시에도 자연스럽게 화면이 전환되는 것을 확인할 수 있었습니다.</p>
-<p>(next.js의 /api를 활용하여 쿠키를 httponly로 다시 세팅하여 이용하는 방법도 고민중입니다.)</p>
+<p>(next.js의 /api를 활용하여 쿠키를 httpOnly로 다시 세팅하여 이용하는 방법도 고민중입니다.)</p>
 <p>가장 삽질을 많이 했지만 많이 배울 수 있었던 경험이었습니다. 😊</p></section><hr/><footer><div class="bio"><img src="/static/jayoon-d5c764119394a065460a4c01aa4969a5.jpg" alt="profile" class="bio-avatar"/><p><strong>공자윤 (SK플래닛)</strong><br/>글쓰기를 좋아하는 프론트엔드 개발자입니다.</p></div></footer></article><nav class="blog-post-nav"><ul style="display:flex;flex-wrap:wrap;justify-content:space-between;list-style:none;padding:0"><li><a rel="prev" href="/nextjs-rendering/">← <!-- -->Next.js 전환 과정 (2) - 렌더링 방식 결정하기</a></li><li><a rel="next" href="/nextjs-refresh-token/">Next.js 전환 과정 (4) - 자동로그인 (토큰 갱신)<!-- --> →</a></li></ul></nav></main><footer class="footer">Copyright © Jayoon Kong<!-- --> 2023<!-- -->, all right reserved.</footer></div></div><div id="gatsby-announcer" style="position:absolute;top:0;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border:0" aria-live="assertive" aria-atomic="true"></div></div><script id="gatsby-script-loader">/*<![CDATA[*/window.pagePath="/nextjs-authentication/";/*]]>*/</script><!-- slice-start id="_gatsby-scripts-1" -->
           <script
             id="gatsby-chunk-mapping"
