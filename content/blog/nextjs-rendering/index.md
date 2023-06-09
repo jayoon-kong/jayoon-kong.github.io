@@ -1,5 +1,5 @@
 ---
-title: "Next.js 전환 과정 (2) - 렌더링 방식 결정하기"
+title: "Next.js 전환 과정 - 렌더링 방식 결정하기"
 date: "2023-03-13"
 tags: ["V컬러링", "next.js", "ssr", "csr", "react-query"]
 author: "jayoon"
@@ -270,5 +270,3 @@ onSlideChange: (swiper: SwiperType) => {
 ```
 
 이렇게 해서 기존과 동일한 UX로 player를 재구현해 보았습니다. 사실 체감상 속도가 크게 개선되었다고 느끼기는 어렵지만, architecture 설계에 대해 심도 있게 고민해 볼 수 있는 좋은 기회였다고 생각합니다.
-
-다음 포스팅에서는 사용자 세션을 적용한 결과를 리뷰해 보도록 하겠습니다.

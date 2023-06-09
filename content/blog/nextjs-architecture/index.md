@@ -1,5 +1,5 @@
 ---
-title: "Next.js 전환 과정 (1) - 기초 설계"
+title: "Next.js 전환 과정 - 기초 설계"
 date: "2023-03-05"
 tags: ["V컬러링", "next.js", "ssr", "csr"]
 author: "jayoon"
@@ -226,5 +226,3 @@ export default memo(MainBanner)
 ![vcoloring_2](./vcoloring_2.png)
 
 실제 V 컬러링과 매우 유사한 형태의 홈 화면이 만들어졌습니다!
-
-다음 포스팅에서는 하단 네비게이션을 통한 라우팅 구현에 대해 알아보도록 하겠습니다.

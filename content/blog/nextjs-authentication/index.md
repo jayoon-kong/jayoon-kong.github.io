@@ -1,5 +1,5 @@
 ---
-title: "Next.js 전환 과정 (3) - 인증 및 토큰 처리하기"
+title: "Next.js 전환 과정 - 인증 및 토큰 처리하기"
 date: "2023-03-23"
 tags: ["V컬러링", "next.js", "ssr", "csr", "react-query"]
 author: "jayoon"

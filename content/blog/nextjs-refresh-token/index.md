@@ -1,5 +1,5 @@
 ---
-title: "Next.js 전환 과정 (4) - 자동로그인 (토큰 갱신)"
+title: "Next.js 전환 과정 - 자동로그인 (토큰 갱신)"
 date: "2023-04-04"
 tags: ["V컬러링", "next.js", "ssr", "csr", "react-query"]
 author: "jayoon"

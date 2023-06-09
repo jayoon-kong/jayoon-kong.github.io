@@ -1,5 +1,5 @@
 ---
-title: "Next.js 전환 과정 (5) - Infinite scroll 데이터에 react query 적용하기"
+title: "Next.js 전환 과정 - Infinite scroll 데이터에 react query 적용하기"
 date: "2023-04-24"
 tags: ["V컬러링", "next.js", "ssr", "csr", "react-query", "useInfiniteScroll"]
 author: "jayoon"
