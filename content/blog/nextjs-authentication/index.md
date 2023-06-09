@@ -1,6 +1,6 @@
 ---
 title: "Next.js 전환 과정 - 인증 및 토큰 처리하기"
-date: "2023-03-23"
+date: "2023-05-26"
 tags: ["V컬러링", "next.js", "ssr", "csr", "react-query"]
 author: "jayoon"
 description: "React로 구현된 SPA (CSR) 프로젝트를 Next.js로 전환하는 과정"
@@ -29,7 +29,7 @@ TokenHelper.setToken({
 // TokenHelper
 import { Cookies } from 'react-cookie';
 
-public static cookie = new Cookies();
+private static cookie = new Cookies();
 public static setToken(params: VRAuth.IToken) {
   if (params) {
     const { token, refreshToken, expired } = params;
@@ -64,7 +64,7 @@ App.getInitialProps = ({ Component, pageProps, ctx }: any) => {
   return {
     props: {
       Component,
-      pageProps: pageProps || {},
+      pageProps,
     },
   };
 };
@@ -101,12 +101,12 @@ export const initializeToken = async (ctx: any) => {
 ```javascript
 // my.tsx
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const tokenData = await initializeToken(ctx);
+
   const { query } = ctx;
   const param = searchParams(query as IParameters);
 
-  const { token, expired } = cookies(ctx);
-
-  if (!token || Number(expired) < Date.now()) {
+  if (!tokenData || (tokenData?.token && Number(tokenData?.expired) < Date.now())) {
     if (EnvChecker.isApp()) {
       return { props: {} };
     }
@@ -120,10 +120,13 @@ export default memo(My);
 
 // login.tsx
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { token, expired } = cookies(ctx);
+  const { query } = ctx;
+  const param = searchParams(query as IParameters);
 
-  if (token && Number(expired) > Date.now()) {
-    return { redirect: { destination: `/${redirectTo()}`, permanent: false } };
+  const tokenData = await initializeToken(ctx);
+
+  if (tokenData && Number(tokenData?.expired) > Date.now()) {
+    return { redirect: { destination: `/${param}`, permanent: false } };
   }
 
   return { props: {} };
@@ -131,7 +134,5 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 ```
 
 이렇게 했더니 로그인 페이지에서 세션이 없는 경우에는 로그인 페이지가, 세션이 있는 경우에는 마이 페이지가 리턴되었습니다. 그리고 로그아웃 후 로그인 시에도 자연스럽게 화면이 전환되는 것을 확인할 수 있었습니다.
-
-(next.js의 /api를 활용하여 쿠키를 httpOnly로 다시 세팅하여 이용하는 방법도 고민중입니다.)
 
 가장 삽질을 많이 했지만 많이 배울 수 있었던 경험이었습니다. 😊

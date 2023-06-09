@@ -1,6 +1,6 @@
 ---
 title: "Next.js 전환 과정 - 자동로그인 (토큰 갱신)"
-date: "2023-04-04"
+date: "2023-06-02"
 tags: ["V컬러링", "next.js", "ssr", "csr", "react-query"]
 author: "jayoon"
 description: "React로 구현된 SPA (CSR) 프로젝트를 Next.js로 전환하는 과정"
@@ -10,7 +10,8 @@ V 컬러링에서는 jwt 인증 방식을 사용하고 있습니다.
 최초에 사용자가 로그인을 하면 서버로부터 `access_token`과 `refresh_token`을 발급받고, 그 값을 어딘가에 저장해 두고 있다가 토큰 값이 만료되면 저장된 `refresh_token`을 이용해 다시 유효한 토큰을 발급받는 방식입니다.
 
 기존의 V 컬러링은 SPA이기 때문에 초기 페이지 진입 시 토큰 만료 여부를 한 번 체크하여 자동로그인이 필요한 경우 토큰 갱신 작업을 수행하고, 이후에는 API fech 때마다 만료 여부를 체크하여 토큰을 갱신합니다.
-이번에도 비슷하게 구현하기 위해서 axios instance의 요청 인터셉터에서 만료 체크 및 자동로그인을 수행하도록 하였는데, 클라이언트 사이드에서 API 요청 시 토큰이 만료되었을 경우에는 성공적으로 자동로그인이 되었지만 서버 사이드에서 최초로 요청했을 경우에는 갱신이 제대로 처리되지 않는 문제가 발생했습니다.
+이번에도 비슷하게 구현하기 위해서 axios instance의 요청 interceptor에서 만료 체크 및 자동로그인을 수행하도록 하였는데, 클라이언트 사이드에서 API 요청 시 토큰이 만료되었을 경우에는 성공적으로 자동로그인이 되었지만
+서버 사이드에서 최초로 요청했을 경우에는 갱신이 제대로 처리되지 않는 문제가 발생했습니다.
 
 ### 이슈1
 
@@ -143,14 +144,105 @@ const initializeToken = async (ctx: any) => {
   const { req: { headers } = {} as any } = ctx;
   const { token, refreshToken, expired } = cookies(ctx);
 
-  if (token && refreshToken && expired) {
-    instance.defaults.headers.Authorization = `Bearer ${token}`; // 헤더에 토큰 정보 저장
-    TokenHelper.setToken({ token, refreshToken, expired: Number(expired) });
-    ...
+  if (token) {
+    TokenHelper.setToken({ token, refreshToken: refreshToken || '', expired: Number(expired) });
+    TokenHelper.setHeader(token, refreshToken || '', Number(expired), res);
+
+    return { token, refreshToken, expired };
   }
+  TokenHelper.clearToken();
+  ...
 }
 ```
 
 이렇게 하면 새로운 토큰 값이 브라우저의 쿠키에 세팅되어 클라이언트에서 접근이 가능합니다.
+
+### 결론
+
+클라이언트 사이드에서 API를 호출했을 경우에는 이렇게 axios instance의 요청 interceptor에서 토큰 갱신을 하고,
+서버 사이드에서는 API 호출 없이도 쿠키로 세션을 판단하는 로직이 있기 때문에 토큰을 세팅하는 과정에서 미리 자동로그인을 수행하도록 하였습니다.
+
+그리고 자동로그인을 처리하는 과정에서 API 요청이 중복으로 들어올 경우 이전 토큰 값이 헤더에 세팅되는 문제가 있어서,
+자동로그인 중에는 API 작업을 홀딩시키고 토큰 갱신 이후 다시 API 요청을 처리하도록 수정하였습니다.
+
+```javascript
+// 서버 사이드
+// my.tsx
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const tokenData = await initializeToken(ctx);
+  ...
+}
+
+//_app.tsx
+export const initializeToken = async (ctx: any) => {
+  ...
+  if (token) {
+    // 만료된 경우 자동 로그인 처리
+    if (Number(expired) < Date.now()) {
+      return await updateToken(res);
+    }
+    ...
+  }
+}
+
+// 클라이언트 사이드
+// axios instance 요청 interceptor
+// 서버 사이드에서는 updateToken을 따로 호출하였기 때문에 클라이언트 사이드에서만 체크하도록 처리
+if (typeof window !== 'undefined' && TokenHelper.needRefresh()) {
+  const response = await updateToken();
+
+  if (!response) {
+    pendingRequests.push({ instance, config });
+    return Promise.reject();
+  }
+
+  if (response?.token) {
+    const { token } = response;
+    pendingRequests.map((item) => {
+      const newConfig = merge(getConfig(), item.config);
+      item.instance(merge(newConfig, { headers: { Authorization: `Bearer ${token}` } }));
+    });
+
+    pendingRequests = [];
+    return merge(mergeConfig, { headers: { Authorization: `Bearer ${token}` } });
+  }
+  ...
+}
+
+// update token
+export const updateToken = async (res?: any): Promise<any> => {
+  if (!IS_FETCHING_REFRESH) {
+    IS_FETCHING_REFRESH = true;
+    const refreshToken = TokenHelper.getRefreshToken();
+
+    return instance
+      .post(
+        ...
+      )
+      .then(
+        (response) => {
+          if (!response) return response;
+
+          const { access_token, refresh_token, expires_in } = response as unknown as VRAuth.IResToken;
+
+          // 토큰 갱신이 완료된 이후 공통 함수에도 토큰을 세팅해 주고, 서버사이드 요청일 경우 헤더에도 세팅을 해 줍니다.
+          TokenHelper.setToken({
+            token: access_token,
+            refreshToken: refresh_token,
+            expired: Date.now() + expires_in * 1000,
+          });
+          TokenHelper.setHeader(access_token, refresh_token, Date.now() + expires_in * 1000, res);
+          ...
+        },
+        (error) => {
+          ...
+        }
+      )
+      .catch((error) => {
+        ...
+      });
+  }
+};
+```
 
 이제 서버사이드와 클라이언트사이드 모든 API 호출 시 자동로그인이 잘 동작합니다. 🙂
