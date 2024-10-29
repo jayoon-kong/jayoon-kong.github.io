@@ -1,14 +1,16 @@
 import * as React from "react"
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react"
 import { graphql } from "gatsby"
-import Layout from "../components/layout";
-import ProjectDetail from "../components/project-detail";
-import Seo from "../components/seo";
+import Layout from "../components/layout"
+import ProjectDetail from "../components/project-detail"
+import Seo from "../components/seo"
 
 const Project = ({ data, location }) => {
   const siteTitle = data.site.siteMetadata?.title
-  const project = useMemo(() => [
-      { company: "SK", name: "V 컬러링", period: "2020.01 ~ 현재" },
+  const project = useMemo(
+    () => [
+      { company: "SK", name: "채팅플랫폼", period: "2024.01 ~ 현재" },
+      { company: "SK", name: "V 컬러링", period: "2020.01 ~ 2023.12" },
       {
         company: "SK",
         name: "SK 동의정보 지킴이",
@@ -37,11 +39,17 @@ const Project = ({ data, location }) => {
     []
   )
 
-  const skProject = useMemo(() => project.filter(item => item.company === "SK"), [project])
+  const skProject = useMemo(
+    () => project.filter(item => item.company === "SK"),
+    [project]
+  )
 
-  const [toggle, setToggle] = useState(project.map(_item => ({ isOpened: false })))
+  const [toggle, setToggle] = useState(
+    project.map(_item => ({ isOpened: false }))
+  )
 
-  const setToggleInfo = useCallback(index => {
+  const setToggleInfo = useCallback(
+    index => {
       setToggle([
         ...(toggle || []).slice(0, index),
         { isOpened: !(toggle || [])[index].isOpened },
@@ -51,7 +59,10 @@ const Project = ({ data, location }) => {
     [toggle]
   )
 
-  const getLGIndex = useMemo(() => index => skProject.length + index, [skProject])
+  const getLGIndex = useMemo(
+    () => index => skProject.length + index,
+    [skProject]
+  )
 
   return (
     <Layout location={location} title={siteTitle}>
@@ -61,7 +72,7 @@ const Project = ({ data, location }) => {
           {project
             .filter(item => item.company === "SK")
             .map((data, index) => (
-              <li 
+              <li
                 key={index}
                 className={`icon ${
                   (toggle || [])[index]?.isOpened ? "up" : "down"
@@ -88,7 +99,11 @@ const Project = ({ data, location }) => {
                 }`}
                 onClick={() => setToggleInfo(getLGIndex(index))}
               >
-                <span className="name">{data.name}<br/><span className="period">{data.period}</span></span>
+                <span className="name">
+                  {data.name}
+                  <br />
+                  <span className="period">{data.period}</span>
+                </span>
                 {(toggle || [])[getLGIndex(index)].isOpened ? (
                   <ProjectDetail childKey={getLGIndex(index)} />
                 ) : null}
@@ -101,11 +116,7 @@ const Project = ({ data, location }) => {
 }
 
 export const Head = () => {
-  return (
-    <Seo
-      title="공자윤의 프로젝트"
-    />
-  )
+  return <Seo title="공자윤의 프로젝트" />
 }
 
 export default Project
