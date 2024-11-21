@@ -1,4 +1,5 @@
 import jayoon from "./images/jayoon.jpg"
+import yujin from "./images/yujin.png"
 
 export const MEMBERS = {
   jayoon: {
@@ -11,5 +12,11 @@ export const MEMBERS = {
     name: "Cony",
     team: "SK플래닛",
     description: "공자윤의 부캐입니다",
+  },
+  yujin: {
+    name: "안유진",
+    team: "IVE",
+    description: "저의 최애가수 안유진입니다.",
+    thumbnail: yujin,
   },
 }
